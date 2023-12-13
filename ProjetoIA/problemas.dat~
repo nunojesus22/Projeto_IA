@@ -77,5 +77,5 @@
 
 
 (defun problem-F ()
-	(tabuleiro-aleatorio)
+	(tabuleiro-aleatorio ( baralhar ( lista-numeros ) ) 10)
 )
