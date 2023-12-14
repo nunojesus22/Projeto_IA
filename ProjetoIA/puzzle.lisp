@@ -48,8 +48,7 @@
 #|Função que recebe dois índices e o tabuleiro e retorna o valor presente nessa célula do tabuleiro.|#
 (defun celula (linha-indice coluna-indice tabuleiro)
   "Retorna o valor presente na célula do tabuleiro correspondente aos índices dados"
-  (let ((linha (nth linha-indice tabuleiro))) ;; Obtém a linha do tabuleiro correspondente ao índice da linha
-    (nth coluna-indice linha))) ;; Obtém o valor da célula na coluna indicada
+  (nth coluna-indice (linha linha-indice tabuleiro))) ;; Obtém o valor da célula na coluna indicada da linha indicada
 
 ;; (celula 0 1 (tabuleiro-teste)) -> 25
 
@@ -119,13 +118,13 @@ Por default a lista será o resultado obtido na alínea 4 (baralhar (lista-numeros
 
 #|Função que recebe um índice, uma lista e um valor (por default o valor é NIL) esubstitui pelo valor pretendido 
 nessa posição.|#
-(defun substituir-posicao (indice lista &optional (valor nil))
+(defun substituir-posicao (coluna lista &optional (valor nil))
   ;; Verifica se o índice é negativo; se sim, retorna a lista original sem modificação
-  (if (< indice 0)
+  (if (< coluna 0)
       lista
       ;; Divide a lista na posição indicada e insere o valor na posição desejada
-      (let ((antes (subseq lista 0 indice))
-            (depois (subseq lista (1+ indice))))
+      (let ((antes (subseq lista 0 coluna))
+            (depois (subseq lista (1+ coluna))))
         (append antes (list valor) depois))))
 
 ;; (substituir-posicao 0 (linha 0 (tabuleiro-teste))) -> (NIL 25 54 89 21 8 36 14 41 96)
@@ -165,6 +164,121 @@ substituir-posicao definida anteriormente. |#
 ;; (posicao-cavalo (tabuleiro-jogado)) -> (0 0)
 
 #|-----------------------------------------------------------------------------------------------------------|#
+#|----------------------------------------------FUNÇÕES AUXILIARES-------------------------------------------|#
+#|-----------------------------------------------------------------------------------------------------------|#
+(defun numero-maximo-lista (lista)
+  "Retorna o maior número da lista fornecido. Se a lista contiver elementos que não são números, eles são 
+  removidos da lista e não entram nas comparações."
+  (reduce #'max (remove-if-not #'numberp lista))
+)
+;; (numero-maximo-lista '(NIL 25 54 89 21 8 36 14 41 96)) -> 96
+
+(defun junta-duas-listas (lista1 lista2)
+  "Esta função junta duas listas numa só. Se a primeira lista tiver 0 elementos, ele retorna a lista2 apenas."
+  (cond
+      ((null lista1) lista2)
+      ((null lista2) lista1) 
+      (T (append lista1 lista2))
+  )
+)
+
+(defun tabuleiro-numa-lista (tabuleiro)
+  "Esta função transforma o tabuleiro (uma lista de listas) numa só lista."
+  (cond 
+      ((null tabuleiro) NIL)
+      (T (junta-duas-listas (car tabuleiro)(tabuleiro-numa-lista (cdr tabuleiro))))
+  )
+)
+#|-----------------------------------------------------------------------------------------------------------|#
+#|----------------------------------------------------REGRAS-------------------------------------------------|#
+#|-----------------------------------------------------------------------------------------------------------|#
+(defun numero-simetrico (numero)
+  "Se o número tem dois dígitos diferentes, retorna o número simétrico. 
+   Caso contrário, retorna nil."
+  (if (and (>= numero 10) (<= numero 99)) ; Verifica se o número tem dois dígitos.
+    (let ((digito1 (mod numero 10))
+          (digito2 (floor numero 10)))
+      (if (/= digito1 digito2) ; Verifica se os dígitos são diferentes.
+        (+ (* digito1 10) digito2))))) ; Retorna o número simétrico se os dígitos forem diferentes.
+
+;; (numero-simetrico 57) -> 75
+;; (numero-simetrico 44) -> nil (números iguais)
+;; (numero-simetrico 123) -> nil (não é um número de dois dígitos)
+#|-----------------------------------------------------------------------------------------------------------|#
+(defun numero-duplo (numero)
+  "Verifica se o número fornecido é um número duplo (dois dígitos iguais).
+   Retorna T (true) se for um número duplo, caso contrário retorna NIL (false)."
+  (and (not (null numero))
+       (not (eq numero T))
+       (>= numero 10) (<= numero 99) ; Verifica se o número tem dois dígitos.
+       (= (mod numero 10) (floor numero 10)))) ; Verifica se os dois dígitos são iguais.
+
+;; (numero-duplo 44) -> T
+;; (numero-duplo 57) -> NIL
+;; (numero-duplo 123) -> NIL (não é um número de dois dígitos)
+#|-----------------------------------------------------------------------------------------------------------|#
+(defun duplos-existentes(lista)
+  "Retorna uma lista dos números duplos que existem numa lista."
+  (cond 
+      ((null lista) '())
+      ((numero-duplo (car lista))
+          (cons (car lista) (duplos-existentes (cdr lista))))
+      (T (duplos-existentes (cdr lista)))
+  )
+)
+
+;;(duplos-existentes (linha 1 (tabuleiro-teste))) -> NIL
+;;(duplos-existentes (linha 4 (tabuleiro-teste))) -> (22 11)
+
+#|-----------------------------------------------------------------------------------------------------------|#
+(defun duplos-existentes-ordenados (tabuleiro)
+  "Retorna uma lista de todos os números duplos existentes no tabuleiro ordenados"
+  (sort (duplos-existentes (tabuleiro-numa-lista tabuleiro)) #'>)
+)
+
+;; (duplos-existentes-ordenados (tabuleiro-teste)) -> (99 88 77 66 55 44 33 22 11)
+#|-----------------------------------------------------------------------------------------------------------|#
+(defun maximo-duplo (tabuleiro)
+  "Retorna o maior número duplo que existe no tabuleiro"
+  (numero-maximo-lista (duplos-existentes-ordenados tabuleiro))
+)
+
+#|-----------------------------------------------------------------------------------------------------------|#
+(defun movimento-valido (linha coluna tabuleiro)
+  "Verifica se a posição para onde se pretende movimentar é válida. Retorna T em caso de ser válido,
+   Caso contrário retornará NIL."
+  (and (>= linha 0)(<= linha 9)
+       (>= coluna 0)(<= coluna 9) ;; Verifica se a coluna e linha estão entre 0 e 9
+       (not (null (celula linha coluna tabuleiro))) ;; Verifica se a celula para onde se movimenta não está a NIL
+  )
+)
+
+;; (movimento-valido 0 1 (tabuleiro-jogado)) -> T
+;; (movimento-valido 0 -1 (tabuleiro-jogado)) -> NIL
+;; (movimento-valido 0 1 (tabuleiro-jogado)) -> NIL - ISTO PORQUE ALTERAMOS O VALOR DE 25 PARA NIL PARA TESTARMOS
+#|-----------------------------------------------------------------------------------------------------------|#
+(defun posicao-valor (valor tabuleiro &optional (line 0))
+  "Verifica se a posição para onde se pretende movimentar é válida. Retorna T em caso de ser válido,
+   Caso contrário retornará NIL."
+  (if (or (null tabuleiro) (> line 9))
+      NIL
+      (let* 
+          (
+             (linha-tabuleiro (linha line tabuleiro))
+             (coluna-valor (position valor linha-tabuleiro))
+          )
+          (if coluna-valor
+            (list line coluna-valor)
+            (posicao-valor valor tabuleiro (1+ line))
+          )
+      )
+  )
+)
+
+;; (posicao-valor 94 (tabuleiro-jogado)) -> NIL
+;; (posicao-valor 94 (tabuleiro-teste)) -> (0 0)
+;; (posicao-valor 92 (tabuleiro-teste)) -> (9 6)
+#|-----------------------------------------------------------------------------------------------------------|#
 #|--------------------------------------------------OPERADORES-----------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
 
@@ -181,28 +295,99 @@ substituir-posicao definida anteriormente. |#
 )
 
 
-(defun numero-simetrico (numero)
-  "Se o número tem dois dígitos diferentes, retorna o número simétrico. 
-   Caso contrário, retorna nil."
-  (if (and (>= numero 10) (<= numero 99)) ; Verifica se o número tem dois dígitos.
-    (let ((digito1 (mod numero 10))
-          (digito2 (floor numero 10)))
-      (if (/= digito1 digito2) ; Verifica se os dígitos são diferentes.
-        (+ (* digito1 10) digito2))))) ; Retorna o número simétrico se os dígitos forem diferentes.
+(defun operador-1 (tabuleiro)
+  (if (eq (posicao-cavalo tabuleiro) NIL)
+      (format t "Cavalo por posicionar.~%")
+      (let* 
+          (
+            (posicao-cavalo-inicio (posicao-cavalo tabuleiro))
+            (nova-linha (+ (first posicao-cavalo-inicio) 2))
+            (nova-coluna (- (second posicao-cavalo-inicio) 1))
+            (posicao-cavalo-final (list nova-linha nova-coluna))
+            (movimento-e-valido (movimento-valido nova-linha nova-coluna tabuleiro))
+          )
+          (if (eq movimento-e-valido NIL)
+              (format t "Movimento inválido.~%")
+              (let* 
+                  (
+                     (simetrico (numero-simetrico (celula nova-linha nova-coluna tabuleiro)))
+                     (posicao-simetrico (posicao-valor simetrico tabuleiro))
+                     (e-duplo (numero-duplo (celula nova-linha nova-coluna tabuleiro)))
+                     (maximo-duplo (maximo-duplo tabuleiro))
+                     (posicao-duplo (posicao-valor maximo-duplo tabuleiro))
+                  )
+                (cond 
+                 ((eq e-duplo T)
+                  (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
+                              (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
+                                          (substituir (first posicao-duplo)(second posicao-duplo) tabuleiro 
+                                            NIL)
+                                NIL)
+                    T)
+                  )
+                 (T
+                  (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
+                              (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
+                                          (substituir (first posicao-simetrico)(second posicao-simetrico) tabuleiro 
+                                                      NIL)
+                                          NIL)
+                              T)
+                  )
+                 )
+              )
+          )
+      )
+  )
+)
 
-;; (numero-simetrico 57) -> 75
-;; (numero-simetrico 44) -> nil (números iguais)
-;; (numero-simetrico 123) -> nil (não é um número de dois dígitos)
 
-(defun numero-duplo (numero)
-  "Verifica se o número fornecido é um número duplo (dois dígitos iguais).
-   Retorna T (true) se for um número duplo, caso contrário retorna NIL (false)."
-  (and (>= numero 10) (<= numero 99) ; Verifica se o número tem dois dígitos.
-       (= (mod numero 10) (floor numero 10)))) ; Verifica se os dois dígitos são iguais.
 
-;; (numero-duplo 44) -> T
-;; (numero-duplo 57) -> NIL
-;; (numero-duplo 123) -> NIL (não é um número de dois dígitos)
+(defun operador-2 (tabuleiro)
+  (if (eq (posicao-cavalo tabuleiro) NIL)
+      (format t "Cavalo por posicionar.~%")
+      (let* 
+          (
+            (posicao-cavalo-inicio (posicao-cavalo tabuleiro))
+            (nova-linha (+ (first posicao-cavalo-inicio) 2))
+            (nova-coluna (+ (second posicao-cavalo-inicio) 1))
+            (posicao-cavalo-final (list nova-linha nova-coluna))
+            (movimento-e-valido (movimento-valido nova-linha nova-coluna tabuleiro))
+          )
+          (if (eq movimento-e-valido NIL)
+              (format t "Movimento inválido.~%")
+              (let* 
+                  (
+                     (simetrico (numero-simetrico (celula nova-linha nova-coluna tabuleiro)))
+                     (posicao-simetrico (posicao-valor simetrico tabuleiro))
+                     (e-duplo (numero-duplo (celula nova-linha nova-coluna tabuleiro)))
+                     (maximo-duplo (maximo-duplo tabuleiro))
+                     (posicao-duplo (posicao-valor maximo-duplo tabuleiro))
+                  )
+                (cond 
+                 ((eq e-duplo T)
+                  (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
+                              (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
+                                          (substituir (first posicao-duplo)(second posicao-duplo) tabuleiro 
+                                            NIL)
+                                NIL)
+                    T)
+                  )
+                 (T
+                  (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
+                              (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
+                                          (substituir (first posicao-simetrico)(second posicao-simetrico) tabuleiro 
+                                                      NIL)
+                                          NIL)
+                              T)
+                  )
+                 )
+              )
+          )
+      )
+  )
+)
+
+
 
 (defun inicializar-cavalo (tabuleiro)
   "Coloca o cavalo na primeira posição do tabuleiro se ele não estiver presente."
@@ -214,9 +399,9 @@ substituir-posicao definida anteriormente. |#
 #|operador-1: Função que recebe o tabuleiro e movimenta o cavalo para a posição 2 linhas abaixo e
 uma coluna ao lado direito, ou seja, o movimento que de acordo com a Figura 1 leva o cavalo para a
 casa de valor 10.|#
-
+#|
 (defun operador-1 (tabuleiro)
-  "Move o cavalo para 2 linhas abaixo e uma coluna à direita, aplicando a regra de número simétrico ou duplo."
+  "Move o cavalo para 2 linhas abaixo e uma coluna à esquerda, aplicando a regra de número simétrico ou duplo."
   (let ((posicao (posicao-cavalo (inicializar-cavalo tabuleiro))))
     (let ((nova-linha (+ (first posicao) 2))
           (nova-coluna (- (second posicao) 1)))
@@ -240,6 +425,8 @@ casa de valor 10.|#
             (setf (nth nova-coluna (nth nova-linha tabuleiro)) 'T))
           (format t "Movimento inválido.~%"))))
   tabuleiro)
+
+
 
 (defun operador-2 (tabuleiro)
   "Move o cavalo para 2 linhas abaixo e uma coluna à direita, aplicando a regra de número simétrico ou duplo."
@@ -266,7 +453,7 @@ casa de valor 10.|#
             (setf (nth nova-coluna (nth nova-linha tabuleiro)) 'T))
           (format t "Movimento inválido.~%"))))
   tabuleiro)
-
+|#
 
 ;; (operador-2 (tabuleiro-teste)) -- 0 49 não está a ficar a NIL
 ;; (operador-2 (tabuleiro-jogado)) -- 0 49 não está a ficar a NIL
