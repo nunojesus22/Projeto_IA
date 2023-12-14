@@ -278,9 +278,16 @@ substituir-posicao definida anteriormente. |#
 ;; (posicao-valor 94 (tabuleiro-jogado)) -> NIL
 ;; (posicao-valor 94 (tabuleiro-teste)) -> (0 0)
 ;; (posicao-valor 92 (tabuleiro-teste)) -> (9 6)
+
 #|-----------------------------------------------------------------------------------------------------------|#
 #|--------------------------------------------------OPERADORES-----------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
+
+(defun inicializar-cavalo (tabuleiro)
+  "Coloca o cavalo na primeira posição do tabuleiro se ele não estiver presente."
+  (unless (posicao-cavalo tabuleiro)
+    (setf (car (car tabuleiro)) 'T))
+  tabuleiro)
 
 (defun lista-operadores ()
   "Cria uma lista com todos os operadores."
@@ -357,10 +364,81 @@ substituir-posicao definida anteriormente. |#
     )
 )
 
+#|-----------------------------------------------------------------------------------------------------------|#
+#|---------------------------------------------------- NÓS --------------------------------------------------|#
+#|-----------------------------------------------------------------------------------------------------------|#
 
-(defun inicializar-cavalo (tabuleiro)
-  "Coloca o cavalo na primeira posição do tabuleiro se ele não estiver presente."
-  (unless (posicao-cavalo tabuleiro)
-    (setf (car (car tabuleiro)) 'T))
-  tabuleiro)
+
+
+
+#|-----------------------------------------------------------------------------------------------------------|#
+#|---------------------------------------------------- TODO -------------------------------------------------|#
+#|-----------------------------------------------------------------------------------------------------------|#
+
+;; -> falta fazer uma função que permita ao utilizador escolher a posição inicial do cavalo e a partir
+;; daí resolver de acordo com o algoritmo selecionado.
+
+
+(defun obter-objetivo (problema)
+  "Retorna o objetivo de pontos para o problema dado."
+  (case problema
+    ('A 70)
+    ('B 60)
+    ('C 270)
+    ('D 600)
+    ('E 300)
+    ('F 2000)
+    (otherwise (error "Problema não definido ou inválido."))))
+
+;; Definindo a função para verificar se pode adicionar pontos
+(defun pode-adicionar-pontos? (pontos-atuais pontos-casa limite)
+  "Verifica se é possível adicionar os pontos da casa aos pontos atuais, sem ultrapassar o objetivo do problema"
+  (let ((novo-total (+ pontos-atuais pontos-casa)))
+    (<= novo-total limite)))
+
+;; (pode-adicionar-pontos? 50 20 (obter-objetivo 'A)) -> T
+;; (pode-adicionar-pontos? 50 25 (obter-objetivo 'A)) -> NIL
+
+(defun somar-pontos (pontos-atuais pontos-casa)
+  "Soma os pontos da casa atual aos pontos atuais e retorna o total."
+  (+ pontos-atuais pontos-casa))
+
+
+
+;; (somar-pontos 50 20) -> 70
+
+;; -> falta implementar BFS
+
+;; PSEUDO-CÓDIGO
+
+#|
+Nó inicial(s) => ABERTOS. Faz g(s)=0.
+Se ABERTOS vazia falha.
+Remove o nó de ABERTOS (n) com menor custo (g) e coloca-o em FECHADOS 
+Se n for um nó objectivo termina e dá a solução.
+Expande o nó n. Colocar os sucessores em ABERTOS, colocando os ponteiros para n e calculando o 
+g de cada um dos sucessores.
+Vai para 2.
+
+|#
+
+;; -> falta implementar DFS
+
+;; PSEUDO-CÓDIGO
+
+#|Nó inicial => ABERTOS
+Se ABERTOS vazia falha.
+Remove o primeiro nó de ABERTOS (n) e coloca-o em FECHADOS 
+Se a profundidade de n é maior que d vai para 2.
+Expande o nó n. Colocar os sucessores no início de ABERTOS, colocando os ponteiros para n.
+Se algum dos sucessores é um nó objectivo sai, e dá a solução. Caso contrário vai para 2.
+|#
+
+
+;; -> falta implementar A*
+
+
+
+
+
 

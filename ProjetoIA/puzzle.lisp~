@@ -295,98 +295,67 @@ substituir-posicao definida anteriormente. |#
 )
 
 
-(defun operador-1 (tabuleiro)
-  (if (eq (posicao-cavalo tabuleiro) NIL)
-      (format t "Cavalo por posicionar.~%")
-      (let* 
-          (
-            (posicao-cavalo-inicio (posicao-cavalo tabuleiro))
-            (nova-linha (+ (first posicao-cavalo-inicio) 2))
-            (nova-coluna (- (second posicao-cavalo-inicio) 1))
-            (posicao-cavalo-final (list nova-linha nova-coluna))
-            (movimento-e-valido (movimento-valido nova-linha nova-coluna tabuleiro))
-          )
-          (if (eq movimento-e-valido NIL)
-              (format t "Movimento inválido.~%")
-              (let* 
-                  (
-                     (simetrico (numero-simetrico (celula nova-linha nova-coluna tabuleiro)))
-                     (posicao-simetrico (posicao-valor simetrico tabuleiro))
-                     (e-duplo (numero-duplo (celula nova-linha nova-coluna tabuleiro)))
-                     (maximo-duplo (maximo-duplo tabuleiro))
-                     (posicao-duplo (posicao-valor maximo-duplo tabuleiro))
-                  )
-                (cond 
-                 ((eq e-duplo T)
-                  (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
-                              (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
-                                          (substituir (first posicao-duplo)(second posicao-duplo) tabuleiro 
-                                            NIL)
-                                NIL)
-                    T)
-                  )
-                 (T
-                  (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
-                              (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
-                                          (substituir (first posicao-simetrico)(second posicao-simetrico) tabuleiro 
-                                                      NIL)
-                                          NIL)
-                              T)
-                  )
-                 )
-              )
-          )
-      )
-  )
+(defun escolhe-operador (tabuleiro numero-operador)
+  (if (or (< numero-operador 1) (> numero-operador 8))
+      (format t "Número do operador inválido. Deve ser entre 1 e 8.~%")
+      (cond
+        ((= numero-operador 1) (operador-geral tabuleiro 2 -1))
+        ((= numero-operador 2) (operador-geral tabuleiro 2 +1))
+        ((= numero-operador 3) (operador-geral tabuleiro 1 +2))
+        ((= numero-operador 4) (operador-geral tabuleiro -1 +2))
+        ((= numero-operador 5) (operador-geral tabuleiro -2 +1))
+        ((= numero-operador 6) (operador-geral tabuleiro -2 -1))
+        ((= numero-operador 7) (operador-geral tabuleiro -1 -2))
+        ((= numero-operador 8) (operador-geral tabuleiro 1 -1))
+        (t (format t "Operador não implementado.~%")))
+   )
 )
 
 
-
-(defun operador-2 (tabuleiro)
+(defun operador-geral (tabuleiro numero-linhas numero-colunas)
   (if (eq (posicao-cavalo tabuleiro) NIL)
       (format t "Cavalo por posicionar.~%")
-      (let* 
-          (
-            (posicao-cavalo-inicio (posicao-cavalo tabuleiro))
-            (nova-linha (+ (first posicao-cavalo-inicio) 2))
-            (nova-coluna (+ (second posicao-cavalo-inicio) 1))
-            (posicao-cavalo-final (list nova-linha nova-coluna))
-            (movimento-e-valido (movimento-valido nova-linha nova-coluna tabuleiro))
+    (let* 
+        (
+         (posicao-cavalo-inicio (posicao-cavalo tabuleiro))
+         (nova-linha (+ (first posicao-cavalo-inicio) numero-linhas))
+         (nova-coluna (+ (second posicao-cavalo-inicio) numero-colunas))
+         (posicao-cavalo-final (list nova-linha nova-coluna))
+         (movimento-e-valido (movimento-valido nova-linha nova-coluna tabuleiro))
+         )
+      (if (eq movimento-e-valido NIL)
+          (format t "Movimento inválido.~%")
+        (let* 
+            (
+             (simetrico (numero-simetrico (celula nova-linha nova-coluna tabuleiro)))
+             (posicao-simetrico (posicao-valor simetrico tabuleiro))
+             (e-duplo (numero-duplo (celula nova-linha nova-coluna tabuleiro)))
+             (maximo-duplo (maximo-duplo tabuleiro))
+             (posicao-duplo (posicao-valor maximo-duplo tabuleiro))
+             )
+          (cond 
+           ((eq e-duplo T)
+            (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
+                        (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
+                                    (substituir (first posicao-duplo)(second posicao-duplo) tabuleiro 
+                                                NIL)
+                                    NIL)
+                        T)
+            )
+           (T
+            (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
+                        (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
+                                    (substituir (first posicao-simetrico)(second posicao-simetrico) tabuleiro 
+                                                NIL)
+                                    NIL)
+                        T)
+            )
+           )
           )
-          (if (eq movimento-e-valido NIL)
-              (format t "Movimento inválido.~%")
-              (let* 
-                  (
-                     (simetrico (numero-simetrico (celula nova-linha nova-coluna tabuleiro)))
-                     (posicao-simetrico (posicao-valor simetrico tabuleiro))
-                     (e-duplo (numero-duplo (celula nova-linha nova-coluna tabuleiro)))
-                     (maximo-duplo (maximo-duplo tabuleiro))
-                     (posicao-duplo (posicao-valor maximo-duplo tabuleiro))
-                  )
-                (cond 
-                 ((eq e-duplo T)
-                  (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
-                              (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
-                                          (substituir (first posicao-duplo)(second posicao-duplo) tabuleiro 
-                                            NIL)
-                                NIL)
-                    T)
-                  )
-                 (T
-                  (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
-                              (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
-                                          (substituir (first posicao-simetrico)(second posicao-simetrico) tabuleiro 
-                                                      NIL)
-                                          NIL)
-                              T)
-                  )
-                 )
-              )
-          )
+        )
       )
-  )
+    )
 )
-
 
 
 (defun inicializar-cavalo (tabuleiro)
@@ -394,230 +363,4 @@ substituir-posicao definida anteriormente. |#
   (unless (posicao-cavalo tabuleiro)
     (setf (car (car tabuleiro)) 'T))
   tabuleiro)
-
-
-#|operador-1: Função que recebe o tabuleiro e movimenta o cavalo para a posição 2 linhas abaixo e
-uma coluna ao lado direito, ou seja, o movimento que de acordo com a Figura 1 leva o cavalo para a
-casa de valor 10.|#
-#|
-(defun operador-1 (tabuleiro)
-  "Move o cavalo para 2 linhas abaixo e uma coluna à esquerda, aplicando a regra de número simétrico ou duplo."
-  (let ((posicao (posicao-cavalo (inicializar-cavalo tabuleiro))))
-    (let ((nova-linha (+ (first posicao) 2))
-          (nova-coluna (- (second posicao) 1)))
-      (if (and (>= nova-linha 0) (< nova-linha (length tabuleiro))
-               (>= nova-coluna 0) (< nova-coluna (length (first tabuleiro))))
-          (let ((numero (celula nova-linha nova-coluna tabuleiro)))
-            ;; Aplicar a regra do número simétrico ou duplo
-            (when (numero-duplo numero)
-              ;; Se for um número duplo, apagar o número.
-              (setf (nth nova-coluna (nth nova-linha tabuleiro)) nil))
-            (when (numero-simetrico numero)
-              ;; Se for um número simétrico, apagar o número simétrico.
-              (let ((simetrico (numero-simetrico numero)))
-                ;; Remove o simétrico de todas as linhas.
-                (setf tabuleiro (mapcar (lambda (linha)
-                                          (mapcar (lambda (x) (if (equal x simetrico) nil x)) linha))
-                                        tabuleiro))))
-            ;; Remover o cavalo da posição atual
-            (setf (nth (second posicao) (nth (first posicao) tabuleiro)) nil)
-            ;; Mover o cavalo para a nova posição
-            (setf (nth nova-coluna (nth nova-linha tabuleiro)) 'T))
-          (format t "Movimento inválido.~%"))))
-  tabuleiro)
-
-
-
-(defun operador-2 (tabuleiro)
-  "Move o cavalo para 2 linhas abaixo e uma coluna à direita, aplicando a regra de número simétrico ou duplo."
-  (let ((posicao (posicao-cavalo (inicializar-cavalo tabuleiro))))
-    (let ((nova-linha (+ (first posicao) 2))
-          (nova-coluna (+ (second posicao) 1)))
-      (if (and (>= nova-linha 0) (< nova-linha (length tabuleiro))
-               (>= nova-coluna 0) (< nova-coluna (length (first tabuleiro))))
-          (let ((numero (celula nova-linha nova-coluna tabuleiro)))
-            ;; Aplicar a regra do número simétrico ou duplo
-            (when (numero-duplo numero)
-              ;; Se for um número duplo, apagar o número.
-              (setf (nth nova-coluna (nth nova-linha tabuleiro)) nil))
-            (when (numero-simetrico numero)
-              ;; Se for um número simétrico, apagar o número simétrico.
-              (let ((simetrico (numero-simetrico numero)))
-                ;; Remove o simétrico de todas as linhas.
-                (setf tabuleiro (mapcar (lambda (linha)
-                                          (mapcar (lambda (x) (if (equal x simetrico) nil x)) linha))
-                                        tabuleiro))))
-            ;; Remover o cavalo da posição atual
-            (setf (nth (second posicao) (nth (first posicao) tabuleiro)) nil)
-            ;; Mover o cavalo para a nova posição
-            (setf (nth nova-coluna (nth nova-linha tabuleiro)) 'T))
-          (format t "Movimento inválido.~%"))))
-  tabuleiro)
-|#
-
-;; (operador-2 (tabuleiro-teste)) -- 0 49 não está a ficar a NIL
-;; (operador-2 (tabuleiro-jogado)) -- 0 49 não está a ficar a NIL
-
-(defun operador-3 (tabuleiro)
-  "Move o cavalo para 2 linhas abaixo e uma coluna à direita, aplicando a regra de número simétrico ou duplo."
-  (let ((posicao (posicao-cavalo (inicializar-cavalo tabuleiro))))
-    (let ((nova-linha (+ (first posicao) 1))
-          (nova-coluna (+ (second posicao) 2)))
-      (if (and (>= nova-linha 0) (< nova-linha (length tabuleiro))
-               (>= nova-coluna 0) (< nova-coluna (length (first tabuleiro))))
-          (let ((numero (celula nova-linha nova-coluna tabuleiro)))
-            ;; Aplicar a regra do número simétrico ou duplo
-            (when (numero-duplo numero)
-              ;; Se for um número duplo, apagar o número.
-              (setf (nth nova-coluna (nth nova-linha tabuleiro)) nil))
-            (when (numero-simetrico numero)
-              ;; Se for um número simétrico, apagar o número simétrico.
-              (let ((simetrico (numero-simetrico numero)))
-                ;; Remove o simétrico de todas as linhas.
-                (setf tabuleiro (mapcar (lambda (linha)
-                                          (mapcar (lambda (x) (if (equal x simetrico) nil x)) linha))
-                                        tabuleiro))))
-            ;; Remover o cavalo da posição atual
-            (setf (nth (second posicao) (nth (first posicao) tabuleiro)) nil)
-            ;; Mover o cavalo para a nova posição
-            (setf (nth nova-coluna (nth nova-linha tabuleiro)) 'T))
-          (format t "Movimento inválido.~%"))))
-  tabuleiro)
-
-(defun operador-4 (tabuleiro)
-  "Move o cavalo para 2 linhas abaixo e uma coluna à direita, aplicando a regra de número simétrico ou duplo."
-  (let ((posicao (posicao-cavalo (inicializar-cavalo tabuleiro))))
-    (let ((nova-linha (- (first posicao) 1))
-          (nova-coluna (+ (second posicao) 2)))
-      (if (and (>= nova-linha 0) (< nova-linha (length tabuleiro))
-               (>= nova-coluna 0) (< nova-coluna (length (first tabuleiro))))
-          (let ((numero (celula nova-linha nova-coluna tabuleiro)))
-            ;; Aplicar a regra do número simétrico ou duplo
-            (when (numero-duplo numero)
-              ;; Se for um número duplo, apagar o número.
-              (setf (nth nova-coluna (nth nova-linha tabuleiro)) nil))
-            (when (numero-simetrico numero)
-              ;; Se for um número simétrico, apagar o número simétrico.
-              (let ((simetrico (numero-simetrico numero)))
-                ;; Remove o simétrico de todas as linhas.
-                (setf tabuleiro (mapcar (lambda (linha)
-                                          (mapcar (lambda (x) (if (equal x simetrico) nil x)) linha))
-                                        tabuleiro))))
-            ;; Remover o cavalo da posição atual
-            (setf (nth (second posicao) (nth (first posicao) tabuleiro)) nil)
-            ;; Mover o cavalo para a nova posição
-            (setf (nth nova-coluna (nth nova-linha tabuleiro)) 'T))
-          (format t "Movimento inválido.~%"))))
-  tabuleiro)
-
-(defun operador-5 (tabuleiro)
-  "Move o cavalo para 2 linhas abaixo e uma coluna à direita, aplicando a regra de número simétrico ou duplo."
-  (let ((posicao (posicao-cavalo (inicializar-cavalo tabuleiro))))
-    (let ((nova-linha (- (first posicao) 2))
-          (nova-coluna (+ (second posicao) 1)))
-      (if (and (>= nova-linha 0) (< nova-linha (length tabuleiro))
-               (>= nova-coluna 0) (< nova-coluna (length (first tabuleiro))))
-          (let ((numero (celula nova-linha nova-coluna tabuleiro)))
-            ;; Aplicar a regra do número simétrico ou duplo
-            (when (numero-duplo numero)
-              ;; Se for um número duplo, apagar o número.
-              (setf (nth nova-coluna (nth nova-linha tabuleiro)) nil))
-            (when (numero-simetrico numero)
-              ;; Se for um número simétrico, apagar o número simétrico.
-              (let ((simetrico (numero-simetrico numero)))
-                ;; Remove o simétrico de todas as linhas.
-                (setf tabuleiro (mapcar (lambda (linha)
-                                          (mapcar (lambda (x) (if (equal x simetrico) nil x)) linha))
-                                        tabuleiro))))
-            ;; Remover o cavalo da posição atual
-            (setf (nth (second posicao) (nth (first posicao) tabuleiro)) nil)
-            ;; Mover o cavalo para a nova posição
-            (setf (nth nova-coluna (nth nova-linha tabuleiro)) 'T))
-          (format t "Movimento inválido.~%"))))
-  tabuleiro)
-
-(defun operador-6 (tabuleiro)
-  "Move o cavalo para 2 linhas abaixo e uma coluna à direita, aplicando a regra de número simétrico ou duplo."
-  (let ((posicao (posicao-cavalo (inicializar-cavalo tabuleiro))))
-    (let ((nova-linha (- (first posicao) 2))
-          (nova-coluna (- (second posicao) 1)))
-      (if (and (>= nova-linha 0) (< nova-linha (length tabuleiro))
-               (>= nova-coluna 0) (< nova-coluna (length (first tabuleiro))))
-          (let ((numero (celula nova-linha nova-coluna tabuleiro)))
-            ;; Aplicar a regra do número simétrico ou duplo
-            (when (numero-duplo numero)
-              ;; Se for um número duplo, apagar o número.
-              (setf (nth nova-coluna (nth nova-linha tabuleiro)) nil))
-            (when (numero-simetrico numero)
-              ;; Se for um número simétrico, apagar o número simétrico.
-              (let ((simetrico (numero-simetrico numero)))
-                ;; Remove o simétrico de todas as linhas.
-                (setf tabuleiro (mapcar (lambda (linha)
-                                          (mapcar (lambda (x) (if (equal x simetrico) nil x)) linha))
-                                        tabuleiro))))
-            ;; Remover o cavalo da posição atual
-            (setf (nth (second posicao) (nth (first posicao) tabuleiro)) nil)
-            ;; Mover o cavalo para a nova posição
-            (setf (nth nova-coluna (nth nova-linha tabuleiro)) 'T))
-          (format t "Movimento inválido.~%"))))
-  tabuleiro)
-
-(defun operador-7 (tabuleiro)
-  "Move o cavalo para 2 linhas abaixo e uma coluna à direita, aplicando a regra de número simétrico ou duplo."
-  (let ((posicao (posicao-cavalo (inicializar-cavalo tabuleiro))))
-    (let ((nova-linha (- (first posicao) 1))
-          (nova-coluna (- (second posicao) 2)))
-      (if (and (>= nova-linha 0) (< nova-linha (length tabuleiro))
-               (>= nova-coluna 0) (< nova-coluna (length (first tabuleiro))))
-          (let ((numero (celula nova-linha nova-coluna tabuleiro)))
-            ;; Aplicar a regra do número simétrico ou duplo
-            (when (numero-duplo numero)
-              ;; Se for um número duplo, apagar o número.
-              (setf (nth nova-coluna (nth nova-linha tabuleiro)) nil))
-            (when (numero-simetrico numero)
-              ;; Se for um número simétrico, apagar o número simétrico.
-              (let ((simetrico (numero-simetrico numero)))
-                ;; Remove o simétrico de todas as linhas.
-                (setf tabuleiro (mapcar (lambda (linha)
-                                          (mapcar (lambda (x) (if (equal x simetrico) nil x)) linha))
-                                        tabuleiro))))
-            ;; Remover o cavalo da posição atual
-            (setf (nth (second posicao) (nth (first posicao) tabuleiro)) nil)
-            ;; Mover o cavalo para a nova posição
-            (setf (nth nova-coluna (nth nova-linha tabuleiro)) 'T))
-          (format t "Movimento inválido.~%"))))
-  tabuleiro)
-
-(defun operador-8 (tabuleiro)
-  "Move o cavalo para 2 linhas abaixo e uma coluna à direita, aplicando a regra de número simétrico ou duplo."
-  (let ((posicao (posicao-cavalo (inicializar-cavalo tabuleiro))))
-    (let ((nova-linha (+ (first posicao) 1))
-          (nova-coluna (- (second posicao) 2)))
-      (if (and (>= nova-linha 0) (< nova-linha (length tabuleiro))
-               (>= nova-coluna 0) (< nova-coluna (length (first tabuleiro))))
-          (let ((numero (celula nova-linha nova-coluna tabuleiro)))
-            ;; Aplicar a regra do número simétrico ou duplo
-            (when (numero-duplo numero)
-              ;; Se for um número duplo, apagar o número.
-              (setf (nth nova-coluna (nth nova-linha tabuleiro)) nil))
-            (when (numero-simetrico numero)
-              ;; Se for um número simétrico, apagar o número simétrico.
-              (let ((simetrico (numero-simetrico numero)))
-                ;; Remove o simétrico de todas as linhas.
-                (setf tabuleiro (mapcar (lambda (linha)
-                                          (mapcar (lambda (x) (if (equal x simetrico) nil x)) linha))
-                                        tabuleiro))))
-            ;; Remover o cavalo da posição atual
-            (setf (nth (second posicao) (nth (first posicao) tabuleiro)) nil)
-            ;; Mover o cavalo para a nova posição
-            (setf (nth nova-coluna (nth nova-linha tabuleiro)) 'T))
-          (format t "Movimento inválido.~%"))))
-  tabuleiro)
-
-
-
-
-
-
-
 
