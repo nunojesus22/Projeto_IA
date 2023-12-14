@@ -1,8 +1,9 @@
 (defun diretoria-atual ()
   "Define o caminho para os ficheiros do projeto a partir da raiz"
-  (let ((path "C:\\Users\\johnn\\OneDrive\\Ambiente de Trabalho\\Projeto_IA\\ProjetoIA\\"))
+  (let ((path "C:\\Users\\nunoj\\Documents\\DEV\\Projeto_IA\\ProjetoIA\\"))
     path))
-
+"C:\\Users\\nunoj\\Documents\\DEV\\Projeto_IA\\ProjetoIA\\ - Nuno"
+"C:\\Users\\johnn\\OneDrive\\Ambiente de Trabalho\\Projeto_IA\\ProjetoIA\\ - Joao"
 
 (defun start ()
   "Permite iniciar o programa carregando e compilando"

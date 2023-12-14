@@ -31,13 +31,13 @@
       ;; Cabeçalho do menu
       (format t "~%          ++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
       (format t "~%          +                                                      +")
-      (format t "~%          +               JOGO DO CAVALEIRO                      +")
+      (format t "~%          +                    JOGO DO CAVALO                    +")
       (format t "~%          +                                                      +")
       ;; Opções do menu
-      (format t "~%          +                1-Jogar Jogo                          +")
-      (format t "~%          +                2-Mostrar Problemas                   +")
-      (format t "~%          +                3-Regras do Jogo                      +")
-      (format t "~%          +                4-Sair                                +")
+      (format t "~%          +                    1-Jogar Jogo                      +")
+      (format t "~%          +                    2-Mostrar Problemas               +")
+      (format t "~%          +                    3-Regras do Jogo                  +")
+      (format t "~%          +                    4-Sair                            +")
       (format t "~%          +                                                      +")
       (format t "~%          ++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
       ;; Linha em branco
@@ -113,7 +113,7 @@
 #|--------------------------------------- MENU DO PROBLEMA SELECIONADO --------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
 
-(defun menu-problema-selecionado (problema)
+(defun menu-problema-selecionado ()
   "Menu do problema a ser resolvido"
   (loop
      (progn
