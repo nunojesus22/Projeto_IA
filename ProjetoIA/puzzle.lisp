@@ -166,11 +166,13 @@ substituir-posicao definida anteriormente. |#
 #|-----------------------------------------------------------------------------------------------------------|#
 #|----------------------------------------------FUNÇÕES AUXILIARES-------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun numero-maximo-lista (lista)
   "Retorna o maior número da lista fornecido. Se a lista contiver elementos que não são números, eles são 
   removidos da lista e não entram nas comparações."
   (reduce #'max (remove-if-not #'numberp lista))
 )
+
 ;; (numero-maximo-lista '(NIL 25 54 89 21 8 36 14 41 96)) -> 96
 
 (defun junta-duas-listas (lista1 lista2)
@@ -189,9 +191,11 @@ substituir-posicao definida anteriormente. |#
       (T (junta-duas-listas (car tabuleiro)(tabuleiro-numa-lista (cdr tabuleiro))))
   )
 )
+
 #|-----------------------------------------------------------------------------------------------------------|#
 #|----------------------------------------------------REGRAS-------------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun numero-simetrico (numero)
   "Se o número tem dois dígitos diferentes, retorna o número simétrico. 
    Caso contrário, retorna nil."
@@ -204,7 +208,9 @@ substituir-posicao definida anteriormente. |#
 ;; (numero-simetrico 57) -> 75
 ;; (numero-simetrico 44) -> nil (números iguais)
 ;; (numero-simetrico 123) -> nil (não é um número de dois dígitos)
+
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun numero-duplo (numero)
   "Verifica se o número fornecido é um número duplo (dois dígitos iguais).
    Retorna T (true) se for um número duplo, caso contrário retorna NIL (false)."
@@ -216,7 +222,9 @@ substituir-posicao definida anteriormente. |#
 ;; (numero-duplo 44) -> T
 ;; (numero-duplo 57) -> NIL
 ;; (numero-duplo 123) -> NIL (não é um número de dois dígitos)
+
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun duplos-existentes(lista)
   "Retorna uma lista dos números duplos que existem numa lista."
   (cond 
@@ -231,19 +239,23 @@ substituir-posicao definida anteriormente. |#
 ;;(duplos-existentes (linha 4 (tabuleiro-teste))) -> (22 11)
 
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun duplos-existentes-ordenados (tabuleiro)
   "Retorna uma lista de todos os números duplos existentes no tabuleiro ordenados"
   (sort (duplos-existentes (tabuleiro-numa-lista tabuleiro)) #'>)
 )
 
 ;; (duplos-existentes-ordenados (tabuleiro-teste)) -> (99 88 77 66 55 44 33 22 11)
+
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun maximo-duplo (tabuleiro)
   "Retorna o maior número duplo que existe no tabuleiro"
   (numero-maximo-lista (duplos-existentes-ordenados tabuleiro))
 )
 
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun movimento-valido (linha coluna tabuleiro)
   "Verifica se a posição para onde se pretende movimentar é válida. Retorna T em caso de ser válido,
    Caso contrário retornará NIL."
@@ -257,6 +269,7 @@ substituir-posicao definida anteriormente. |#
 ;; (movimento-valido 0 -1 (tabuleiro-jogado)) -> NIL
 ;; (movimento-valido 0 1 (tabuleiro-jogado)) -> NIL - ISTO PORQUE ALTERAMOS O VALOR DE 25 PARA NIL PARA TESTARMOS
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun posicao-valor (valor tabuleiro &optional (line 0))
   "Verifica se a posição para onde se pretende movimentar é válida. Retorna T em caso de ser válido,
    Caso contrário retornará NIL."
@@ -283,11 +296,32 @@ substituir-posicao definida anteriormente. |#
 #|--------------------------------------------------OPERADORES-----------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
 
-(defun inicializar-cavalo (tabuleiro)
-  "Coloca o cavalo na primeira posição do tabuleiro se ele não estiver presente."
-  (unless (posicao-cavalo tabuleiro)
-    (setf (car (car tabuleiro)) 'T))
-  tabuleiro)
+(defun inicializar-cavalo (tabuleiro &optional (coluna 0))
+  "Coloca o cavalo na posição [0, coluna] de uma cópia do tabuleiro, onde coluna é opcional e deve ser entre 0 e 10."
+  (let ((novo-tabuleiro (limpar-cavalos (copy-list tabuleiro)))) ; Cria uma cópia do tabuleiro e remove cavalos existentes
+    (cond
+      ((or (< coluna 0) (> coluna 10)) ; Se a coluna é inválida
+       (setq coluna 0)) ; Ajusta para 0
+      (t
+       (setf (nth coluna (car novo-tabuleiro)) 'T))) ; Coloca o cavalo na posição especificada no novo tabuleiro
+    novo-tabuleiro)) ; Retorna o novo tabuleiro
+
+;; (tabuleiro-teste)
+;; (inicializar-cavalo (tabuleiro-teste))
+;; (tabuleiro-teste)
+;; (inicializar-cavalo (tabuleiro-teste) 7)
+;; (tabuleiro-teste)
+
+(defun limpar-cavalos (tabuleiro)
+  "Remove todos os cavalos ('T') do tabuleiro, substituindo-os por nil."
+  (mapcar (lambda (linha) 
+            (mapcar (lambda (celula) 
+                      (if (eql celula 'T) nil celula))
+                    linha))
+          tabuleiro))
+
+;; (limpar-cavalos (tabuleiro-teste))
+
 
 (defun lista-operadores ()
   "Cria uma lista com todos os operadores."
@@ -363,6 +397,7 @@ substituir-posicao definida anteriormente. |#
       )
     )
 )
+
 
 #|-----------------------------------------------------------------------------------------------------------|#
 #|---------------------------------------------------- NÓS --------------------------------------------------|#
