@@ -378,6 +378,7 @@ substituir-posicao definida anteriormente. |#
 ;; -> falta fazer uma função que permita ao utilizador escolher a posição inicial do cavalo e a partir
 ;; daí resolver de acordo com o algoritmo selecionado.
 
+#|-----------------------------------------------------------------------------------------------------------|#
 
 (defun obter-objetivo (problema)
   "Retorna o objetivo de pontos para o problema dado."
@@ -390,7 +391,11 @@ substituir-posicao definida anteriormente. |#
     ('F 2000)
     (otherwise (error "Problema não definido ou inválido."))))
 
-;; Definindo a função para verificar se pode adicionar pontos
+;; (obter-objetivo 'A) -> 70
+
+#|-----------------------------------------------------------------------------------------------------------|#
+
+;; Função para verificar se pode adicionar pontos
 (defun pode-adicionar-pontos? (pontos-atuais pontos-casa limite)
   "Verifica se é possível adicionar os pontos da casa aos pontos atuais, sem ultrapassar o objetivo do problema"
   (let ((novo-total (+ pontos-atuais pontos-casa)))
@@ -399,13 +404,15 @@ substituir-posicao definida anteriormente. |#
 ;; (pode-adicionar-pontos? 50 20 (obter-objetivo 'A)) -> T
 ;; (pode-adicionar-pontos? 50 25 (obter-objetivo 'A)) -> NIL
 
+#|-----------------------------------------------------------------------------------------------------------|#
+
 (defun somar-pontos (pontos-atuais pontos-casa)
   "Soma os pontos da casa atual aos pontos atuais e retorna o total."
   (+ pontos-atuais pontos-casa))
 
-
-
 ;; (somar-pontos 50 20) -> 70
+
+#|-----------------------------------------------------------------------------------------------------------|#
 
 ;; -> falta implementar BFS
 
@@ -437,7 +444,7 @@ Se algum dos sucessores é um nó objectivo sai, e dá a solução. Caso contrário va
 
 ;; -> falta implementar A*
 
-
+#|-----------------------------------------------------------------------------------------------------------|#
 
 
 
