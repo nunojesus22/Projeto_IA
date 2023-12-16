@@ -1,4 +1,4 @@
-;;; Tabuleiros
+    ;;; Tabuleiros
 
 (defun problem-A ()
 	'(
@@ -35,7 +35,7 @@
 )
 
 (defun tabuleiro-jogado ()
-"Tabuleiro de teste igual ao anterior mas tendo sido colocado o cavalo na posição: i=0 e j=0"
+"Tabuleiro de teste igual ao anterior mas tendo sido colocado o cavalo na posiï¿½ï¿½o: i=0 e j=0"
   '(
     (T 25 54 89 21 8 36 14 41 96) 
     (78 47 56 23 5 49 13 12 26 60) 
@@ -53,30 +53,30 @@
 
 ;;; Exercicios
 
-#|Função que recebe um índice e o tabuleiro e retorna uma lista que representa essa linha do tabuleiro.|#
+#|Funï¿½ï¿½o que recebe um ï¿½ndice e o tabuleiro e retorna uma lista que representa essa linha do tabuleiro.|#
 (defun linha (indice tabuleiro)
-  "Retorna a linha do tabuleiro correspondente ao índice dado"
+  "Retorna a linha do tabuleiro correspondente ao ï¿½ndice dado"
   (nth indice tabuleiro))
 
 ; (linha 0 (tabuleiro-teste)) -> (94 25 54 89 21 8 36 14 41 96)
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
-#|Função que recebe dois índices e o tabuleiro e retorna o valor presente nessa célula do tabuleiro.|#
+#|Funï¿½ï¿½o que recebe dois ï¿½ndices e o tabuleiro e retorna o valor presente nessa cï¿½lula do tabuleiro.|#
 (defun celula (linha-indice coluna-indice tabuleiro)
-  "Retorna o valor presente na célula do tabuleiro correspondente aos índices dados"
-  (nth coluna-indice (linha linha-indice tabuleiro))) ;; Obtém o valor da célula na coluna indicada da linha indicada
+  "Retorna o valor presente na cï¿½lula do tabuleiro correspondente aos ï¿½ndices dados"
+  (nth coluna-indice (linha linha-indice tabuleiro))) ;; Obtï¿½m o valor da cï¿½lula na coluna indicada da linha indicada
 
 ;; (celula 0 1 (tabuleiro-teste)) -> 25
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
-#|Função que recebe um número positivo n e cria uma lista com todos os números
-entre 0 (inclusivé) e o número passado como argumento (exclusivé). Por default o n é 100.|#
+#|Funï¿½ï¿½o que recebe um nï¿½mero positivo n e cria uma lista com todos os nï¿½meros
+entre 0 (inclusivï¿½) e o nï¿½mero passado como argumento (exclusivï¿½). Por default o n ï¿½ 100.|#
 (defun lista-numeros (&optional (n 100))
-  "Cria uma lista com todos os números de 0 (inclusivo) até n (exclusivo). Por padrão, n é 100."
-  (cond ((<= n 0) nil)  ;; Caso base: Se n é 0 ou negativo, retorna uma lista vazia.
-        (t (cons (- n 1) (lista-numeros (- n 1))))))  ;; Constrói a lista do maior para o menor número.
+  "Cria uma lista com todos os nï¿½meros de 0 (inclusivo) atï¿½ n (exclusivo). Por padrï¿½o, n ï¿½ 100."
+  (cond ((<= n 0) nil)  ;; Caso base: Se n ï¿½ 0 ou negativo, retorna uma lista vazia.
+        (t (cons (- n 1) (lista-numeros (- n 1))))))  ;; Constrï¿½i a lista do maior para o menor nï¿½mero.
 
 ;; Exemplos de uso:
 ;; (lista-numeros 5) -> (4 3 2 1 0)
@@ -85,30 +85,30 @@ entre 0 (inclusivé) e o número passado como argumento (exclusivé). Por default o
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
-#|A função remover-se (<predicado> <lista>) permite reconstruir uma lista sem os elementos que verificam 
+#|A funï¿½ï¿½o remover-se (<predicado> <lista>) permite reconstruir uma lista sem os elementos que verificam 
 o predicado passado como argumento.|#
 (defun remover-se(pred lista)
   (cond ((null lista) NIL) ;; Lista vazia, retorna NIL
         ;; O primeiro elemento da lista satisfaz o predicado, chama recursivamente para a cauda
         ((funcall pred (car lista)) (remover-se pred (cdr lista)))
-        ;; O primeiro elemento não satisfaz o predicado, consolida o elemento e chama recursivamente para a cauda 
+        ;; O primeiro elemento nï¿½o satisfaz o predicado, consolida o elemento e chama recursivamente para a cauda 
         (T (cons (car lista) (remover-se pred (cdr lista))))))
 
 ;; (remover-se #'(lambda (x) (= x 0)) '(1 2 0 2 0 4)) -> (1 2 2 4)
 
-#|Função recursiva que remove o número da lista igual ao encontrado aleatoriamente|#
+#|Funï¿½ï¿½o recursiva que remove o nï¿½mero da lista igual ao encontrado aleatoriamente|#
 (defun baralhar-recursivo (lista)
-  "Baralha aleatoriamente os números em uma lista."
-  (if (endp lista) ;; Verifica se a lista está vazia
+  "Baralha aleatoriamente os nï¿½meros em uma lista."
+  (if (endp lista) ;; Verifica se a lista estï¿½ vazia
       nil ;; Retorna NIL
-      ;; Passo 2: Escolhe um número aleatório da lista
+      ;; Passo 2: Escolhe um nï¿½mero aleatï¿½rio da lista
       (let ((numero (nth (random (length lista)) lista)))
-        ;; Passo 3: Adiciona o número escolhido e continua recursivamente removendo-o da lista
+        ;; Passo 3: Adiciona o nï¿½mero escolhido e continua recursivamente removendo-o da lista
         (cons numero (baralhar-recursivo (remover-se (lambda (x) (= x numero)) lista))))))
 
-#|Função que recebe uma lista e irá mudar aleatoriamente os seus números.|#
+#|Funï¿½ï¿½o que recebe uma lista e irï¿½ mudar aleatoriamente os seus nï¿½meros.|#
 (defun baralhar (lista)
-  "Função principal para baralhar uma lista."
+  "Funï¿½ï¿½o principal para baralhar uma lista."
   (baralhar-recursivo lista))
 
 ;; (baralhar (lista-numeros))
@@ -116,14 +116,14 @@ o predicado passado como argumento.|#
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
-#|Função que pega numa lista e cria sublistas de n elementos recorrendo à função subseq que tem um comportamento
+#|Funï¿½ï¿½o que pega numa lista e cria sublistas de n elementos recorrendo ï¿½ funï¿½ï¿½o subseq que tem um comportamento
 semelhante ao substring para strings.
-Por default a lista será o resultado obtido na alínea 4 (baralhar (lista-numeros)) e o n é 10|#
+Por default a lista serï¿½ o resultado obtido na alï¿½nea 4 (baralhar (lista-numeros)) e o n ï¿½ 10|#
 (defun tabuleiro-aleatorio (&optional (lista (baralhar (lista-numeros))) (n 10))
-  "Cria um tabuleiro aleatório dividindo a lista em sublistas de tamanho n.
-  Por padrão, a lista é o resultado da função (baralhar (lista-numeros)) e n é 10."
+  "Cria um tabuleiro aleatï¿½rio dividindo a lista em sublistas de tamanho n.
+  Por padrï¿½o, a lista ï¿½ o resultado da funï¿½ï¿½o (baralhar (lista-numeros)) e n ï¿½ 10."
   (cond
-    ((null lista) nil)  ; Condição de paragem: se a lista estiver vazia, retorna nil
+    ((null lista) nil)  ; Condiï¿½ï¿½o de paragem: se a lista estiver vazia, retorna nil
     (t (cons (subseq lista 0 n) (tabuleiro-aleatorio (subseq lista n) n)))
   )
 )
@@ -133,13 +133,13 @@ Por default a lista será o resultado obtido na alínea 4 (baralhar (lista-numeros
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
-#|Função que recebe um índice, uma lista e um valor (por default o valor é NIL) esubstitui pelo valor pretendido 
-nessa posição.|#
+#|Funï¿½ï¿½o que recebe um ï¿½ndice, uma lista e um valor (por default o valor ï¿½ NIL) esubstitui pelo valor pretendido 
+nessa posiï¿½ï¿½o.|#
 (defun substituir-posicao (coluna lista &optional (valor nil))
-  ;; Verifica se o índice é negativo; se sim, retorna a lista original sem modificação
+  ;; Verifica se o ï¿½ndice ï¿½ negativo; se sim, retorna a lista original sem modificaï¿½ï¿½o
   (if (< coluna 0)
       lista
-      ;; Divide a lista na posição indicada e insere o valor na posição desejada
+      ;; Divide a lista na posiï¿½ï¿½o indicada e insere o valor na posiï¿½ï¿½o desejada
       (let ((antes (subseq lista 0 coluna))
             (depois (subseq lista (1+ coluna))))
         (append antes (list valor) depois))))
@@ -149,15 +149,15 @@ nessa posição.|#
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
-#|Função que recebe dois índices, o tabuleiro e um valor (por default o valor é NIL). A
-função deverá retornar o tabuleiro com a célula substituída pelo valor pretendido. Utiliza a função
+#|Funï¿½ï¿½o que recebe dois ï¿½ndices, o tabuleiro e um valor (por default o valor ï¿½ NIL). A
+funï¿½ï¿½o deverï¿½ retornar o tabuleiro com a cï¿½lula substituï¿½da pelo valor pretendido. Utiliza a funï¿½ï¿½o
 substituir-posicao definida anteriormente. |#
 (defun substituir (linha-indice coluna-indice tabuleiro &optional (valor nil))
-  "Substitui o valor na célula indicada pelos índices no tabuleiro.
-  - linha-indice: Índice da linha na qual realizar a substituição.
-  - coluna-indice: Índice da coluna na qual realizar a substituição.
-  - tabuleiro: Tabuleiro no qual realizar a substituição.
-  - valor: Valor a ser inserido na célula. Por padrão, é NIL."
+  "Substitui o valor na cï¿½lula indicada pelos ï¿½ndices no tabuleiro.
+  - linha-indice: ï¿½ndice da linha na qual realizar a substituiï¿½ï¿½o.
+  - coluna-indice: ï¿½ndice da coluna na qual realizar a substituiï¿½ï¿½o.
+  - tabuleiro: Tabuleiro no qual realizar a substituiï¿½ï¿½o.
+  - valor: Valor a ser inserido na cï¿½lula. Por padrï¿½o, ï¿½ NIL."
   (substituir-posicao linha-indice tabuleiro
                       (substituir-posicao coluna-indice (nth linha-indice tabuleiro) valor)))
 
@@ -166,11 +166,11 @@ substituir-posicao definida anteriormente. |#
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun procura-cavalo-na-linha (linha)
-  "Procura o cavalo em uma linha específica. Retorna a posição de 'T' ou NIL se não encontrado."
+  "Procura o cavalo em uma linha especï¿½fica. Retorna a posiï¿½ï¿½o de 'T' ou NIL se nï¿½o encontrado."
   (position 'T linha :test #'eql))
 
 (defun posicao-cavalo (tabuleiro &optional (line 0))
- "Retorna a posicção (x y) de onde se localiza o cavalo"
+ "Retorna a posicï¿½ï¿½o (x y) de onde se localiza o cavalo"
   (cond    
    ((null tabuleiro) Nil)
    ((equal (find T (car tabuleiro)) T) (list line (position T (car tabuleiro))))
@@ -181,17 +181,19 @@ substituir-posicao definida anteriormente. |#
 ;; (posicao-cavalo (tabuleiro-jogado)) -> (0 0)
 
 #|-----------------------------------------------------------------------------------------------------------|#
-#|----------------------------------------------FUNÇÕES AUXILIARES-------------------------------------------|#
+#|----------------------------------------------FUNï¿½ï¿½ES AUXILIARES-------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun numero-maximo-lista (lista)
-  "Retorna o maior número da lista fornecido. Se a lista contiver elementos que não são números, eles são 
-  removidos da lista e não entram nas comparações."
+  "Retorna o maior nï¿½mero da lista fornecido. Se a lista contiver elementos que nï¿½o sï¿½o nï¿½meros, eles sï¿½o 
+  removidos da lista e nï¿½o entram nas comparaï¿½ï¿½es."
   (reduce #'max (remove-if-not #'numberp lista))
 )
+
 ;; (numero-maximo-lista '(NIL 25 54 89 21 8 36 14 41 96)) -> 96
 
 (defun junta-duas-listas (lista1 lista2)
-  "Esta função junta duas listas numa só. Se a primeira lista tiver 0 elementos, ele retorna a lista2 apenas."
+  "Esta funï¿½ï¿½o junta duas listas numa sï¿½. Se a primeira lista tiver 0 elementos, ele retorna a lista2 apenas."
   (cond
       ((null lista1) lista2)
       ((null lista2) lista1) 
@@ -200,7 +202,7 @@ substituir-posicao definida anteriormente. |#
 )
 
 (defun tabuleiro-numa-lista (tabuleiro)
-  "Esta função transforma o tabuleiro (uma lista de listas) numa só lista."
+  "Esta funï¿½ï¿½o transforma o tabuleiro (uma lista de listas) numa sï¿½ lista."
   (cond 
       ((null tabuleiro) NIL)
       (T (junta-duas-listas (car tabuleiro)(tabuleiro-numa-lista (cdr tabuleiro))))
@@ -208,7 +210,7 @@ substituir-posicao definida anteriormente. |#
 )
 
 (defun pontos-no-tabuleiro (tabuleiro)
-  "Soma todos os pontos disponíveis dentro do tabuleiro fornecido."
+  "Soma todos os pontos disponï¿½veis dentro do tabuleiro fornecido."
   (reduce #'+(remove-if-not #'numberp(tabuleiro-numa-lista tabuleiro)))
 )
 
@@ -264,7 +266,7 @@ substituir-posicao definida anteriormente. |#
 )
 
 (defun sucessores-tabuleiro-inicial (no lista-valores-disponiveis)
-  "Esta função cria nós para todas as possiveis primerias jogadas"
+  "Esta funï¿½ï¿½o cria nï¿½s para todas as possiveis primerias jogadas"
   (cond
    ((null lista-valores-disponiveis) nil)
    (t (cons 
@@ -279,33 +281,38 @@ substituir-posicao definida anteriormente. |#
 #|-----------------------------------------------------------------------------------------------------------|#
 #|----------------------------------------------------REGRAS-------------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun numero-simetrico (numero)
-  "Se o número tem dois dígitos diferentes, retorna o número simétrico. 
-   Caso contrário, retorna nil."
-  (if (and (>= numero 10) (<= numero 99)) ; Verifica se o número tem dois dígitos.
+  "Se o nï¿½mero tem dois dï¿½gitos diferentes, retorna o nï¿½mero simï¿½trico. 
+   Caso contrï¿½rio, retorna nil."
+  (if (and (>= numero 10) (<= numero 99)) ; Verifica se o nï¿½mero tem dois dï¿½gitos.
     (let ((digito1 (mod numero 10))
           (digito2 (floor numero 10)))
-      (if (/= digito1 digito2) ; Verifica se os dígitos são diferentes.
-        (+ (* digito1 10) digito2))))) ; Retorna o número simétrico se os dígitos forem diferentes.
+      (if (/= digito1 digito2) ; Verifica se os dï¿½gitos sï¿½o diferentes.
+        (+ (* digito1 10) digito2))))) ; Retorna o nï¿½mero simï¿½trico se os dï¿½gitos forem diferentes.
 
 ;; (numero-simetrico 57) -> 75
-;; (numero-simetrico 44) -> nil (números iguais)
-;; (numero-simetrico 123) -> nil (não é um número de dois dígitos)
+;; (numero-simetrico 44) -> nil (nï¿½meros iguais)
+;; (numero-simetrico 123) -> nil (nï¿½o ï¿½ um nï¿½mero de dois dï¿½gitos)
+
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun numero-duplo (numero)
-  "Verifica se o número fornecido é um número duplo (dois dígitos iguais).
-   Retorna T (true) se for um número duplo, caso contrário retorna NIL (false)."
+  "Verifica se o nï¿½mero fornecido ï¿½ um nï¿½mero duplo (dois dï¿½gitos iguais).
+   Retorna T (true) se for um nï¿½mero duplo, caso contrï¿½rio retorna NIL (false)."
   (and (not (null numero))
        (not (eq numero T))
-       (>= numero 10) (<= numero 99) ; Verifica se o número tem dois dígitos.
-       (= (mod numero 10) (floor numero 10)))) ; Verifica se os dois dígitos são iguais.
+       (>= numero 10) (<= numero 99) ; Verifica se o nï¿½mero tem dois dï¿½gitos.
+       (= (mod numero 10) (floor numero 10)))) ; Verifica se os dois dï¿½gitos sï¿½o iguais.
 
 ;; (numero-duplo 44) -> T
 ;; (numero-duplo 57) -> NIL
-;; (numero-duplo 123) -> NIL (não é um número de dois dígitos)
+;; (numero-duplo 123) -> NIL (nï¿½o ï¿½ um nï¿½mero de dois dï¿½gitos)
+
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun duplos-existentes(lista)
-  "Retorna uma lista dos números duplos que existem numa lista."
+  "Retorna uma lista dos nï¿½meros duplos que existem numa lista."
   (cond 
       ((null lista) '())
       ((numero-duplo (car lista))
@@ -318,25 +325,29 @@ substituir-posicao definida anteriormente. |#
 ;;(duplos-existentes (linha 4 (tabuleiro-teste))) -> (22 11)
 
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun duplos-existentes-ordenados (tabuleiro)
-  "Retorna uma lista de todos os números duplos existentes no tabuleiro ordenados"
+  "Retorna uma lista de todos os nï¿½meros duplos existentes no tabuleiro ordenados"
   (sort (duplos-existentes (tabuleiro-numa-lista tabuleiro)) #'>)
 )
 
 ;; (duplos-existentes-ordenados (tabuleiro-teste)) -> (99 88 77 66 55 44 33 22 11)
+
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun maximo-duplo (tabuleiro)
-  "Retorna o maior número duplo que existe no tabuleiro"
+  "Retorna o maior nï¿½mero duplo que existe no tabuleiro"
   (numero-maximo-lista (duplos-existentes-ordenados tabuleiro))
 )
 
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun movimento-valido (linha coluna tabuleiro)
-  "Verifica se a posição para onde se pretende movimentar é válida. Retorna T em caso de ser válido,
-   Caso contrário retornará NIL."
+  "Verifica se a posiï¿½ï¿½o para onde se pretende movimentar ï¿½ vï¿½lida. Retorna T em caso de ser vï¿½lido,
+   Caso contrï¿½rio retornarï¿½ NIL."
   (and (>= linha 0)(<= linha 9)
-       (>= coluna 0)(<= coluna 9) ;; Verifica se a coluna e linha estão entre 0 e 9
-       (not (null (celula linha coluna tabuleiro))) ;; Verifica se a celula para onde se movimenta não está a NIL
+       (>= coluna 0)(<= coluna 9) ;; Verifica se a coluna e linha estï¿½o entre 0 e 9
+       (not (null (celula linha coluna tabuleiro))) ;; Verifica se a celula para onde se movimenta nï¿½o estï¿½ a NIL
   )
 )
 
@@ -344,9 +355,10 @@ substituir-posicao definida anteriormente. |#
 ;; (movimento-valido 0 -1 (tabuleiro-jogado)) -> NIL
 ;; (movimento-valido 0 1 (tabuleiro-jogado)) -> NIL - ISTO PORQUE ALTERAMOS O VALOR DE 25 PARA NIL PARA TESTARMOS
 #|-----------------------------------------------------------------------------------------------------------|#
+
 (defun posicao-valor (valor tabuleiro &optional (line 0))
-  "Verifica se a posição para onde se pretende movimentar é válida. Retorna T em caso de ser válido,
-   Caso contrário retornará NIL."
+  "Verifica se a posiï¿½ï¿½o para onde se pretende movimentar ï¿½ vï¿½lida. Retorna T em caso de ser vï¿½lido,
+   Caso contrï¿½rio retornarï¿½ NIL."
   (if (or (null tabuleiro) (> line 9))
       NIL
       (let* 
@@ -371,13 +383,13 @@ substituir-posicao definida anteriormente. |#
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun inicializar-cavalo (tabuleiro &optional (coluna 0))
-  "Coloca o cavalo na coluna selecionada para a primeira jogada. Caso não seja informada a coluna, ele coloca
-   na posição (0 0). Caso seja fornecida uma coluna inválida, ele informa que a coluna é invalida."
+  "Coloca o cavalo na coluna selecionada para a primeira jogada. Caso nï¿½o seja informada a coluna, ele coloca
+   na posiï¿½ï¿½o (0 0). Caso seja fornecida uma coluna invï¿½lida, ele informa que a coluna ï¿½ invalida."
   (cond 
        ((or(> coluna 9)(< coluna 0))
-        (format t "Coluna inválida.~%"))
+        (format t "Coluna invï¿½lida.~%"))
        ((not (eq (posicao-cavalo tabuleiro) NIL))
-         (format t "Cavalo já colocado.~%"))
+         (format t "Cavalo jï¿½ colocado.~%"))
        (T
            (let* 
                (
@@ -414,7 +426,7 @@ substituir-posicao definida anteriormente. |#
 )
 
 ;; (inicializar-cavalo (tabuleiro-teste) 10)
-;; (inicializar-cavalo (tabuleiro-teste) 7)
+
 
 (defun limpar-cavalos (tabuleiro)
   "Remove todos os cavalos ('T') do tabuleiro, substituindo-os por nil."
@@ -425,6 +437,7 @@ substituir-posicao definida anteriormente. |#
           tabuleiro))
 
 ;; (limpar-cavalos (tabuleiro-teste))
+
 
 (defun lista-operadores ()
   "Cria uma lista com todos os operadores."
@@ -441,7 +454,7 @@ substituir-posicao definida anteriormente. |#
 
 (defun escolhe-operador (tabuleiro numero-operador)
   (if (or (< numero-operador 1) (> numero-operador 8))
-      (format t "Número do operador inválido. Deve ser entre 1 e 8.~%")
+      (format t "Nï¿½mero do operador invï¿½lido. Deve ser entre 1 e 8.~%")
       (cond
         ((= numero-operador 1) (operador-geral tabuleiro 2 -1))
         ((= numero-operador 2) (operador-geral tabuleiro 2 +1))
@@ -451,7 +464,7 @@ substituir-posicao definida anteriormente. |#
         ((= numero-operador 6) (operador-geral tabuleiro -2 -1))
         ((= numero-operador 7) (operador-geral tabuleiro -1 -2))
         ((= numero-operador 8) (operador-geral tabuleiro 1 -1))
-        (t (format t "Operador não implementado.~%")))
+        (t (format t "Operador nï¿½o implementado.~%")))
    )
 )
 
@@ -468,7 +481,7 @@ substituir-posicao definida anteriormente. |#
          (movimento-e-valido (movimento-valido nova-linha nova-coluna tabuleiro))
          )
       (if (eq movimento-e-valido NIL)
-          (format t "Movimento inválido.~%")
+          (format t "Movimento invï¿½lido.~%")
         (let* 
             (
              (simetrico (numero-simetrico (celula nova-linha nova-coluna tabuleiro)))
@@ -501,45 +514,46 @@ substituir-posicao definida anteriormente. |#
     )
   )
 
+
 #|-----------------------------------------------------------------------------------------------------------|#
-#|---------------------------------------------------- NÓS --------------------------------------------------|#
+#|---------------------------------------------------- Nï¿½S --------------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
 (defun criar-no(tabuleiro posicao-do-cavalo pontuacao-atual profundidade no-pai &optional(heuristica 0))
-  "Função responsável para criar um nó.
-   Estrutura do nó: Estado do tabuleiro - Posicao atual do cavalo - Pontuaçao obtida - Profundidade (equivale
-   às jogadas feitas) - Estado anterior do tabuleiro - Heuristica utilizada."
+  "Funï¿½ï¿½o responsï¿½vel para criar um nï¿½.
+   Estrutura do nï¿½: Estado do tabuleiro - Posicao atual do cavalo - Pontuaï¿½ao obtida - Profundidade (equivale
+   ï¿½s jogadas feitas) - Estado anterior do tabuleiro - Heuristica utilizada."
   (list tabuleiro posicao-do-cavalo pontuacao-atual profundidade no-pai heuristica)
 )
 
 (defun estado-tabuleiro(no)
-  "Função responsável por mostrar o estado do tabuleiro no nó fornecido."
+  "Funï¿½ï¿½o responsï¿½vel por mostrar o estado do tabuleiro no nï¿½ fornecido."
   (first no)
 )
 
 (defun posicao-do-cavalo-atual(no)
-  "Função responsável por mostrar a posicao atual onde está o cavalo."
+  "Funï¿½ï¿½o responsï¿½vel por mostrar a posicao atual onde estï¿½ o cavalo."
   (second no)
 )
 
 (defun pontuacao-atual(no)
-  "Função responsável por mostrar quantos pontos já se tem no nó."
+  "Funï¿½ï¿½o responsï¿½vel por mostrar quantos pontos jï¿½ se tem no nï¿½."
   (third no)
 )
 
 (defun profundidade(no)
-  "Função responsável por mostrar a profundidade do nó que representa as jogadas feitas até chegar aquele
+  "Funï¿½ï¿½o responsï¿½vel por mostrar a profundidade do nï¿½ que representa as jogadas feitas atï¿½ chegar aquele
    estado"
   (fourth no)
 )
 
 (defun no-pai(no)
-  "Função responsável por mostrar o nó pai deste, ou seja, o estado do tabuleiro anterior a ter se jogado 
+  "Funï¿½ï¿½o responsï¿½vel por mostrar o nï¿½ pai deste, ou seja, o estado do tabuleiro anterior a ter se jogado 
    para chegar aquele estado"
   (fifth no)
 )
 
 (defun no-heuristica(no)
-  "Função responsável por mostrar a heuristica"
+  "Funï¿½ï¿½o responsï¿½vel por mostrar a heuristica"
   (sixth no)
 )
 
@@ -562,12 +576,12 @@ substituir-posicao definida anteriormente. |#
      )
 
      #| HEURISTICA DADA PELO PROFESSOR - BASE 
-       h(x) = o(x)/m(x) -> Privelegia casas com maior número de pontos.
-       m(x) = Média de pontos no tabuleiro.
-       o(x) = Número de pontos que falta para atingir objetivo.
+       h(x) = o(x)/m(x) -> Privelegia casas com maior nï¿½mero de pontos.
+       m(x) = Mï¿½dia de pontos no tabuleiro.
+       o(x) = Nï¿½mero de pontos que falta para atingir objetivo.
       |#
      (defun m-base (no)
-       "Esta função calcula o m(x) da heuristica base consoante o estado do tabuleiro. Se as casas disponiveis ou os pontos no tabuleiro forem 0, então o m será 0 também."
+       "Esta funï¿½ï¿½o calcula o m(x) da heuristica base consoante o estado do tabuleiro. Se as casas disponiveis ou os pontos no tabuleiro forem 0, entï¿½o o m serï¿½ 0 tambï¿½m."
        (if (or(eq (pontos-no-tabuleiro (estado-tabuleiro no)) 0) (eq (posicoes-livres-tabuleiro (estado-tabuleiro no)) 0))
            0
          (float (/ (pontos-no-tabuleiro (estado-tabuleiro no)) (posicoes-livres-tabuleiro (estado-tabuleiro no))))
@@ -575,7 +589,7 @@ substituir-posicao definida anteriormente. |#
      )
 
      (defun o-base (no)
-       "Esta função calcula o o(x) da heuristica base consoante o estado do tabuleiro. Ou seja, para sabermos os pontos conseguidos, percisamos do nó. Tendo o nó, podemos recorrer diretamente a uma das propriedades do nó, a pontuação."
+       "Esta funï¿½ï¿½o calcula o o(x) da heuristica base consoante o estado do tabuleiro. Ou seja, para sabermos os pontos conseguidos, percisamos do nï¿½. Tendo o nï¿½, podemos recorrer diretamente a uma das propriedades do nï¿½, a pontuaï¿½ï¿½o."
        (if (eq (obter-objetivo) nil)
            NIL
          (float (/ (pontos-no-tabuleiro (estado-tabuleiro no)) (posicoes-livres-tabuleiro (estado-tabuleiro no))))
@@ -583,7 +597,7 @@ substituir-posicao definida anteriormente. |#
      )
      
      (defun h-base (no)
-       "Esta função calcula a heuristica do nó, usando o estado do tabuleiro do nó."
+       "Esta funï¿½ï¿½o calcula a heuristica do nï¿½, usando o estado do tabuleiro do nï¿½."
        (if (or(eq (o-base no) 0) (eq (m-base no) 0))
            0
            (float (/ (o-base no) (m-base no)))
@@ -597,7 +611,7 @@ substituir-posicao definida anteriormente. |#
 #|-----------------------------------------------------------------------------------------------------------|#
 #|-------------------------------------------------- PROBLEMA -----------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
-#| Isto permite que a variavel do problema esteja escondida e não seja manipulável por qualquer um. As funções ficam definidas dentro da closure do problema para essas funções conseguirem manipular o problema.|#
+#| Isto permite que a variavel do problema esteja escondida e nï¿½o seja manipulï¿½vel por qualquer um. As funï¿½ï¿½es ficam definidas dentro da closure do problema para essas funï¿½ï¿½es conseguirem manipular o problema.|#
 (let ((problema nil))
      (defun definir-objetivo(problema-pretendido)
        (setf problema problema-pretendido)
@@ -624,8 +638,8 @@ substituir-posicao definida anteriormente. |#
 #|---------------------------------------------------- TODO -------------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
 
-;; -> falta fazer uma função que permita ao utilizador escolher a posição inicial do cavalo e a partir
-;; daí resolver de acordo com o algoritmo selecionado.
+;; -> falta fazer uma funï¿½ï¿½o que permita ao utilizador escolher a posiï¿½ï¿½o inicial do cavalo e a partir
+;; daï¿½ resolver de acordo com o algoritmo selecionado.
 
 #|-----------------------------------------------------------------------------------------------------------|#
 #|
@@ -638,15 +652,15 @@ substituir-posicao definida anteriormente. |#
     ('D 600)
     ('E 300)
     ('F 2000)
-    (otherwise (error "Problema não definido ou inválido.")))) |#
+    (otherwise (error "Problema nï¿½o definido ou invï¿½lido.")))) |#
 
 ;; (obter-objetivo 'A) -> 70
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
-;; Função para verificar se pode adicionar pontos
+;; Funï¿½ï¿½o para verificar se pode adicionar pontos
 (defun pode-adicionar-pontos? (pontos-atuais pontos-casa limite)
-  "Verifica se é possível adicionar os pontos da casa aos pontos atuais, sem ultrapassar o objetivo do problema"
+  "Verifica se ï¿½ possï¿½vel adicionar os pontos da casa aos pontos atuais, sem ultrapassar o objetivo do problema"
   (let ((novo-total (+ pontos-atuais pontos-casa)))
     (<= novo-total limite)))
 
@@ -665,14 +679,14 @@ substituir-posicao definida anteriormente. |#
 
 ;; -> falta implementar BFS
 
-;; PSEUDO-CÓDIGO
+;; PSEUDO-Cï¿½DIGO
 
 #|
-Nó inicial(s) => ABERTOS. Faz g(s)=0.
+Nï¿½ inicial(s) => ABERTOS. Faz g(s)=0.
 Se ABERTOS vazia falha.
-Remove o nó de ABERTOS (n) com menor custo (g) e coloca-o em FECHADOS 
-Se n for um nó objectivo termina e dá a solução.
-Expande o nó n. Colocar os sucessores em ABERTOS, colocando os ponteiros para n e calculando o 
+Remove o nï¿½ de ABERTOS (n) com menor custo (g) e coloca-o em FECHADOS 
+Se n for um nï¿½ objectivo termina e dï¿½ a soluï¿½ï¿½o.
+Expande o nï¿½ n. Colocar os sucessores em ABERTOS, colocando os ponteiros para n e calculando o 
 g de cada um dos sucessores.
 Vai para 2.
 
@@ -680,14 +694,14 @@ Vai para 2.
 
 ;; -> falta implementar DFS
 
-;; PSEUDO-CÓDIGO
+;; PSEUDO-Cï¿½DIGO
 
-#|Nó inicial => ABERTOS
+#|Nï¿½ inicial => ABERTOS
 Se ABERTOS vazia falha.
-Remove o primeiro nó de ABERTOS (n) e coloca-o em FECHADOS 
-Se a profundidade de n é maior que d vai para 2.
-Expande o nó n. Colocar os sucessores no início de ABERTOS, colocando os ponteiros para n.
-Se algum dos sucessores é um nó objectivo sai, e dá a solução. Caso contrário vai para 2.
+Remove o primeiro nï¿½ de ABERTOS (n) e coloca-o em FECHADOS 
+Se a profundidade de n ï¿½ maior que d vai para 2.
+Expande o nï¿½ n. Colocar os sucessores no inï¿½cio de ABERTOS, colocando os ponteiros para n.
+Se algum dos sucessores ï¿½ um nï¿½ objectivo sai, e dï¿½ a soluï¿½ï¿½o. Caso contrï¿½rio vai para 2.
 |#
 
 

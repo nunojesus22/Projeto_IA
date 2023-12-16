@@ -1,6 +1,8 @@
 ﻿# Manual de Utilizador da 1ª Fase do Projeto - Época Normal
 
-![alt text](Imagens/logo_ests.png)
+<p align="center">
+  <img src="Imagens/logo_ests.png" alt="alt text">
+</p>
 
 ## Inteligência Artificial - Escola Superior de Tecnologia de Setúbal 2023/2024
 
@@ -34,37 +36,13 @@ No contexto da unidade curricular de Inteligência Artificial, fomos encarregado
 
 # 2. Instalação
 
-![alt text](Imagens/lispworks.png)
+<p align="center">
+  <img src="Imagens/lispworks.png" alt="alt text">
+</p>
 
 A aplicação requer a instalação do IDE LispWorks.
 
 LispWorks é uma plataforma integrada que atua como ferramenta de desenvolvimento para a linguagem Common Lisp. Pode adquirir a edição PersonalEdition e efetuar o download [aqui](https://www.lispworks.com/products/lispworks.html).
-
-O "Jogo do Cavalo" foi implementado em LISP, tendo sido desenvolvido com o auxílio do IDE LispWorks. A estrutura do projeto é formada por 4 ficheiros:
-
-* projeto.lisp - Responsável pela interação com o utilizador, escrita e leitura de ficheiros;
-* puzzle.lisp - Implementação da resolução do problema, incluindo seletores, operadores heurísticos e outras funções auxiliares;
-* procura.lisp - Implementação dos algoritmos BFS, DFS e A*;
-* problemas.dat - Funções com os problemas de A) a F), previamente definidos.
-
- Visto que a estrutura do projeto é composta por 4 ficheiros distintos, para cada máquina temos de configurar o path ou o caminho da diretoria desses ficheiros então a alteração a realizar deverá alterar o *path* no ficheiro Projeto.lisp.
-
-```Lisp
-(defun diretoria-atual ()
-"Estabelece o caminho até aos ficheiros do projeto a partir do diretório raiz"
-  (let ((path "C:\\Path\\"))
-    path
-  )
-)
-
-(defun ficheiro-solucao ()
-(let ((path  "C:\\Path\\solucao.dat"))
-    path
-  )
-)
-```
-
-Após a configuração do caminho, deve-se abrir o LispWorks, seguidamente abrir o ficheiro Projeto.Lisp e compilar o mesmo.
 
 # 3. Acrónimos e Convenções usadas
 
