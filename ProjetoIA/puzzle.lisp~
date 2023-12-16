@@ -622,14 +622,14 @@ substituir-posicao definida anteriormente. |#
              (novo-tabuleiro (first resultado-operador))
              (nova-posicao (second resultado-operador)))
         (when novo-tabuleiro
-          (format t "Movendo para linha ~A, coluna ~A.~%" (first nova-posicao) (second nova-posicao))
+          (format t "Movendo para linha ~A, coluna ~A. ~%" (first nova-posicao) (second nova-posicao))
           (let ((valor-celula (celula (first nova-posicao) (second nova-posicao) tabuleiro-atual)))
             (when (numberp valor-celula)
               (let ((nova-pontuacao (+ pontuacao-atual valor-celula)))
-                (format t "Pontos obtidos: ~A, Pontuação total: ~A~%" valor-celula nova-pontuacao)
+                (format t "Pontos obtidos: ~A, Pontuação total: ~A ~%" valor-celula nova-pontuacao)
                 (push (criar-no novo-tabuleiro nova-posicao nova-pontuacao (1+ profundidade-atual) no) sucessores)))))))
     (if (null sucessores)
-        (format t "Não há mais movimentos possíveis a partir desta posição.~%"))
+        (format t "Não há mais movimentos possíveis a partir desta posição. ~%"))
     sucessores))
 
 #|-----------------------------------------------------------------------------------------------------------|#
@@ -645,20 +645,20 @@ substituir-posicao definida anteriormente. |#
 (defun bfs-recursivo (fila fechados nos-gerados nos-expandidos)
   "Função recursiva auxiliar para BFS. Processa nós de forma recursiva."
   (if (null fila) ; Checa se a fila está vazia
-      (list 'Failure nos-gerados nos-expandidos) ; Retorna falha se não houver mais nós para explorar
-      (let* ((no-atual (first fila)) ; Pega o primeiro nó da fila
-             (resto-fila (rest fila)) ; Resto da fila, excluindo o primeiro nó
-             (novos-abertos '())) ; Lista para acumular novos nós a serem abertos
+      (let ((fator-ramificacao-media (calcular-fator-ramificacao-media nos-gerados nos-expandidos)))
+        (format t "Fator de Ramificação Média: ~A ~%" fator-ramificacao-media)
+        (list 'Failure nos-gerados nos-expandidos fator-ramificacao-media)) ; Retorna falha com contadores e fator
+      (let* ((no-atual (first fila))
+             (resto-fila (rest fila))
+             (novos-abertos '()))
         (incf nos-expandidos)
-        (format t "~%Nó expandido. Total de nós expandidos: ~a. ~%" nos-expandidos)
-        (format t "~%Profundidade atual (g(x)): ~a.~%" (profundidade no-atual))
         (dolist (sucessor (expandir-no no-atual))
           (unless (find sucessor fechados :test #'equal)
             (incf nos-gerados)
-            (format t "~%Novo nó gerado. Total de nós gerados: ~a. ~%" nos-gerados)
             (push sucessor novos-abertos)))
         (push no-atual fechados)
         (bfs-recursivo (append resto-fila novos-abertos) fechados nos-gerados nos-expandidos))))
+
 
 
 #|
@@ -673,8 +673,10 @@ usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
   (let* ((valor-celula-inicial (celula 0 0 tabuleiro-problema))
          (tabuleiro-inicializado (inicializar-cavalo tabuleiro-problema))
          (pontuacao-inicial (+ (if (numberp valor-celula-inicial) valor-celula-inicial 0) 2))
-         (abertos (list (criar-no tabuleiro-inicializado (posicao-cavalo tabuleiro-inicializado) pontuacao-inicial 0 nil))))
-    (bfs-recursivo abertos '() 0 0))) ; Inicia a busca com contadores de nós gerados e expandidos zerados
+         (abertos (list (criar-no tabuleiro-inicializado (posicao-cavalo tabuleiro-inicializado) pontuacao-inicial 0 nil)))
+         (tempo-execucao (medir-tempo-execucao 'bfs-recursivo abertos '() 0 0)))
+    (format t "Tempo de execução: ~A segundos ~%" tempo-execucao)
+    tempo-execucao))
 
 
 #|-----------------------------------------------------------------------------------------------------------|#
@@ -693,7 +695,7 @@ usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
       (let ((no-atual (pop abertos))) ; Pega o último nó da pilha
         (incf nos-expandidos) ; Incrementa o contador de nós expandidos
         (format t "~%Nó expandido. Total de nós expandidos: ~a. ~%" nos-expandidos)
-        (format t "~%Profundidade atual (g(x)): ~a.~%" (profundidade no-atual))
+        (format t "~%Profundidade atual (g(x)): ~a. ~%" (profundidade no-atual))
         (dolist (sucessor (expandir-no no-atual)) ; Expande os sucessores do nó atual
           (unless (find sucessor fechados :test #'equal) ; Verifica se o sucessor já foi explorado
             (incf nos-gerados) ; Incrementa o contador de nós gerados
@@ -755,7 +757,7 @@ usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
                (abertos-restantes (rest abertos)) ; Resto da lista de abertos
                (sucessores (expandir-no no-atual))) ; Expande o nó atual para encontrar sucessores
                 (format t "~%Nó expandido. Total de nós expandidos: ~a. ~%" nos-expandidos)
-                (format t "~%Profundidade atual (g(x)): ~a.~%" (profundidade no-atual))
+                (format t "~%Profundidade atual (g(x)): ~a. ~%" (profundidade no-atual))
           (incf nos-expandidos) ; Incrementa o contador de nós expandidos
           (when (atingiu-objetivo? no-atual)
             (return-from a-estrela-bloco (list 'Success no-atual nos-gerados nos-expandidos))) ; Retorna sucesso se o objetivo for atingido
@@ -775,3 +777,18 @@ usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
          (pontuacao-inicial (+ (if (numberp valor-celula-inicial) valor-celula-inicial 0) 2)) ; Calcula a pontuação inicial
          (abertos (list (criar-no tabuleiro-inicializado (posicao-cavalo tabuleiro-inicializado) pontuacao-inicial 0 nil)))) ; Cria a lista de abertos com o nó inicial
     (a-estrela-recursivo abertos '() 0 0))) ; Inicia o A* recursivo com a lista de abertos e fechados vazia, e contadores zerados
+
+#|-----------------------------------------------------------------------------------------------------------|#
+#|------------------------------------------- ESTATÍSTICAS DE DADOS -----------------------------------------|#
+#|-----------------------------------------------------------------------------------------------------------|#
+
+(defun medir-tempo-execucao (funcao &rest args)
+  (let ((start (get-internal-real-time)))
+    (apply funcao args)
+    (let ((end (get-internal-real-time)))
+      (/ (- end start) internal-time-units-per-second))))
+
+(defun calcular-fator-ramificacao-media (nos-gerados nos-expandidos)
+  (if (> nos-expandidos 0)
+      (/ (float nos-gerados) nos-expandidos)
+      0))

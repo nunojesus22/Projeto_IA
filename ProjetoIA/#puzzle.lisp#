@@ -20,7 +20,7 @@
 )
 
 (defun tabuleiro-jogado ()
-"Tabuleiro de teste igual ao anterior mas tendo sido colocado o cavalo na posi��o: i=0 e j=0"
+"Tabuleiro de teste igual ao anterior mas tendo sido colocado o cavalo na posiï¿½ï¿½o: i=0 e j=0"
   '(
     (T 25 54 89 21 8 36 14 41 96) 
     (78 47 56 23 5 49 13 12 26 60) 
@@ -38,30 +38,30 @@
 
 ;;; Exercicios
 
-#|Fun��o que recebe um �ndice e o tabuleiro e retorna uma lista que representa essa linha do tabuleiro.|#
+#|Funï¿½ï¿½o que recebe um ï¿½ndice e o tabuleiro e retorna uma lista que representa essa linha do tabuleiro.|#
 (defun linha (indice tabuleiro)
-  "Retorna a linha do tabuleiro correspondente ao �ndice dado"
+  "Retorna a linha do tabuleiro correspondente ao ï¿½ndice dado"
   (nth indice tabuleiro))
 
 ; (linha 0 (tabuleiro-teste)) -> (94 25 54 89 21 8 36 14 41 96)
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
-#|Fun��o que recebe dois �ndices e o tabuleiro e retorna o valor presente nessa c�lula do tabuleiro.|#
+#|Funï¿½ï¿½o que recebe dois ï¿½ndices e o tabuleiro e retorna o valor presente nessa cï¿½lula do tabuleiro.|#
 (defun celula (linha-indice coluna-indice tabuleiro)
-  "Retorna o valor presente na c�lula do tabuleiro correspondente aos �ndices dados"
-  (nth coluna-indice (linha linha-indice tabuleiro))) ;; Obt�m o valor da c�lula na coluna indicada da linha indicada
+  "Retorna o valor presente na cï¿½lula do tabuleiro correspondente aos ï¿½ndices dados"
+  (nth coluna-indice (linha linha-indice tabuleiro))) ;; Obtï¿½m o valor da cï¿½lula na coluna indicada da linha indicada
 
 ;; (celula 0 1 (tabuleiro-teste)) -> 25
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
-#|Fun��o que recebe um n�mero positivo n e cria uma lista com todos os n�meros
-entre 0 (inclusiv�) e o n�mero passado como argumento (exclusiv�). Por default o n � 100.|#
+#|Funï¿½ï¿½o que recebe um nï¿½mero positivo n e cria uma lista com todos os nï¿½meros
+entre 0 (inclusivï¿½) e o nï¿½mero passado como argumento (exclusivï¿½). Por default o n ï¿½ 100.|#
 (defun lista-numeros (&optional (n 100))
-  "Cria uma lista com todos os n�meros de 0 (inclusivo) at� n (exclusivo). Por padr�o, n � 100."
-  (cond ((<= n 0) nil)  ;; Caso base: Se n � 0 ou negativo, retorna uma lista vazia.
-        (t (cons (- n 1) (lista-numeros (- n 1))))))  ;; Constr�i a lista do maior para o menor n�mero.
+  "Cria uma lista com todos os nï¿½meros de 0 (inclusivo) atï¿½ n (exclusivo). Por padrï¿½o, n ï¿½ 100."
+  (cond ((<= n 0) nil)  ;; Caso base: Se n ï¿½ 0 ou negativo, retorna uma lista vazia.
+        (t (cons (- n 1) (lista-numeros (- n 1))))))  ;; Constrï¿½i a lista do maior para o menor nï¿½mero.
 
 ;; Exemplos de uso:
 ;; (lista-numeros 5) -> (4 3 2 1 0)
@@ -70,30 +70,30 @@ entre 0 (inclusiv�) e o n�mero passado como argumento (exclusiv�). Por def
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
-#|A fun��o remover-se (<predicado> <lista>) permite reconstruir uma lista sem os elementos que verificam 
+#|A funï¿½ï¿½o remover-se (<predicado> <lista>) permite reconstruir uma lista sem os elementos que verificam 
 o predicado passado como argumento.|#
 (defun remover-se(pred lista)
   (cond ((null lista) NIL) ;; Lista vazia, retorna NIL
         ;; O primeiro elemento da lista satisfaz o predicado, chama recursivamente para a cauda
         ((funcall pred (car lista)) (remover-se pred (cdr lista)))
-        ;; O primeiro elemento n�o satisfaz o predicado, consolida o elemento e chama recursivamente para a cauda 
+        ;; O primeiro elemento nï¿½o satisfaz o predicado, consolida o elemento e chama recursivamente para a cauda 
         (T (cons (car lista) (remover-se pred (cdr lista))))))
 
 ;; (remover-se #'(lambda (x) (= x 0)) '(1 2 0 2 0 4)) -> (1 2 2 4)
 
-#|Fun��o recursiva que remove o n�mero da lista igual ao encontrado aleatoriamente|#
+#|Funï¿½ï¿½o recursiva que remove o nï¿½mero da lista igual ao encontrado aleatoriamente|#
 (defun baralhar-recursivo (lista)
-  "Baralha aleatoriamente os n�meros em uma lista."
-  (if (endp lista) ;; Verifica se a lista est� vazia
+  "Baralha aleatoriamente os nï¿½meros em uma lista."
+  (if (endp lista) ;; Verifica se a lista estï¿½ vazia
       nil ;; Retorna NIL
-      ;; Passo 2: Escolhe um n�mero aleat�rio da lista
+      ;; Passo 2: Escolhe um nï¿½mero aleatï¿½rio da lista
       (let ((numero (nth (random (length lista)) lista)))
-        ;; Passo 3: Adiciona o n�mero escolhido e continua recursivamente removendo-o da lista
+        ;; Passo 3: Adiciona o nï¿½mero escolhido e continua recursivamente removendo-o da lista
         (cons numero (baralhar-recursivo (remover-se (lambda (x) (= x numero)) lista))))))
 
-#|Fun��o que recebe uma lista e ir� mudar aleatoriamente os seus n�meros.|#
+#|Funï¿½ï¿½o que recebe uma lista e irï¿½ mudar aleatoriamente os seus nï¿½meros.|#
 (defun baralhar (lista)
-  "Fun��o principal para baralhar uma lista."
+  "Funï¿½ï¿½o principal para baralhar uma lista."
   (baralhar-recursivo lista))
 
 ;; (baralhar (lista-numeros))
@@ -101,14 +101,14 @@ o predicado passado como argumento.|#
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
-#|Fun��o que pega numa lista e cria sublistas de n elementos recorrendo � fun��o subseq que tem um comportamento
+#|Funï¿½ï¿½o que pega numa lista e cria sublistas de n elementos recorrendo ï¿½ funï¿½ï¿½o subseq que tem um comportamento
 semelhante ao substring para strings.
-Por default a lista ser� o resultado obtido na al�nea 4 (baralhar (lista-numeros)) e o n � 10|#
+Por default a lista serï¿½ o resultado obtido na alï¿½nea 4 (baralhar (lista-numeros)) e o n ï¿½ 10|#
 (defun tabuleiro-aleatorio (&optional (lista (baralhar (lista-numeros))) (n 10))
-  "Cria um tabuleiro aleat�rio dividindo a lista em sublistas de tamanho n.
-  Por padr�o, a lista � o resultado da fun��o (baralhar (lista-numeros)) e n � 10."
+  "Cria um tabuleiro aleatï¿½rio dividindo a lista em sublistas de tamanho n.
+  Por padrï¿½o, a lista ï¿½ o resultado da funï¿½ï¿½o (baralhar (lista-numeros)) e n ï¿½ 10."
   (cond
-    ((null lista) nil)  ; Condi��o de paragem: se a lista estiver vazia, retorna nil
+    ((null lista) nil)  ; Condiï¿½ï¿½o de paragem: se a lista estiver vazia, retorna nil
     (t (cons (subseq lista 0 n) (tabuleiro-aleatorio (subseq lista n) n)))
   )
 )
@@ -118,13 +118,13 @@ Por default a lista ser� o resultado obtido na al�nea 4 (baralhar (lista-num
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
-#|Fun��o que recebe um �ndice, uma lista e um valor (por default o valor � NIL) esubstitui pelo valor pretendido 
-nessa posi��o.|#
+#|Funï¿½ï¿½o que recebe um ï¿½ndice, uma lista e um valor (por default o valor ï¿½ NIL) esubstitui pelo valor pretendido 
+nessa posiï¿½ï¿½o.|#
 (defun substituir-posicao (coluna lista &optional (valor nil))
-  ;; Verifica se o �ndice � negativo; se sim, retorna a lista original sem modifica��o
+  ;; Verifica se o ï¿½ndice ï¿½ negativo; se sim, retorna a lista original sem modificaï¿½ï¿½o
   (if (< coluna 0)
       lista
-      ;; Divide a lista na posi��o indicada e insere o valor na posi��o desejada
+      ;; Divide a lista na posiï¿½ï¿½o indicada e insere o valor na posiï¿½ï¿½o desejada
       (let ((antes (subseq lista 0 coluna))
             (depois (subseq lista (1+ coluna))))
         (append antes (list valor) depois))))
@@ -134,15 +134,15 @@ nessa posi��o.|#
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
-#|Fun��o que recebe dois �ndices, o tabuleiro e um valor (por default o valor � NIL). A
-fun��o dever� retornar o tabuleiro com a c�lula substitu�da pelo valor pretendido. Utiliza a fun��o
+#|Funï¿½ï¿½o que recebe dois ï¿½ndices, o tabuleiro e um valor (por default o valor ï¿½ NIL). A
+funï¿½ï¿½o deverï¿½ retornar o tabuleiro com a cï¿½lula substituï¿½da pelo valor pretendido. Utiliza a funï¿½ï¿½o
 substituir-posicao definida anteriormente. |#
 (defun substituir (linha-indice coluna-indice tabuleiro &optional (valor nil))
-  "Substitui o valor na c�lula indicada pelos �ndices no tabuleiro.
-  - linha-indice: �ndice da linha na qual realizar a substitui��o.
-  - coluna-indice: �ndice da coluna na qual realizar a substitui��o.
-  - tabuleiro: Tabuleiro no qual realizar a substitui��o.
-  - valor: Valor a ser inserido na c�lula. Por padr�o, � NIL."
+  "Substitui o valor na cï¿½lula indicada pelos ï¿½ndices no tabuleiro.
+  - linha-indice: ï¿½ndice da linha na qual realizar a substituiï¿½ï¿½o.
+  - coluna-indice: ï¿½ndice da coluna na qual realizar a substituiï¿½ï¿½o.
+  - tabuleiro: Tabuleiro no qual realizar a substituiï¿½ï¿½o.
+  - valor: Valor a ser inserido na cï¿½lula. Por padrï¿½o, ï¿½ NIL."
   (substituir-posicao linha-indice tabuleiro
                       (substituir-posicao coluna-indice (nth linha-indice tabuleiro) valor)))
 
@@ -151,11 +151,11 @@ substituir-posicao definida anteriormente. |#
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun procura-cavalo-na-linha (linha)
-  "Procura o cavalo em uma linha espec�fica. Retorna a posi��o de 'T' ou NIL se n�o encontrado."
+  "Procura o cavalo em uma linha especï¿½fica. Retorna a posiï¿½ï¿½o de 'T' ou NIL se nï¿½o encontrado."
   (position 'T linha :test #'eql))
 
 (defun posicao-cavalo (tabuleiro &optional (line 0))
- "Retorna a posic��o (x y) de onde se localiza o cavalo"
+ "Retorna a posicï¿½ï¿½o (x y) de onde se localiza o cavalo"
   (cond    
    ((null tabuleiro) Nil)
    ((equal (find T (car tabuleiro)) T) (list line (position T (car tabuleiro))))
@@ -166,19 +166,19 @@ substituir-posicao definida anteriormente. |#
 ;; (posicao-cavalo (tabuleiro-jogado)) -> (0 0)
 
 #|-----------------------------------------------------------------------------------------------------------|#
-#|----------------------------------------------FUN��ES AUXILIARES-------------------------------------------|#
+#|----------------------------------------------FUNï¿½ï¿½ES AUXILIARES-------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun numero-maximo-lista (lista)
-  "Retorna o maior n�mero da lista fornecido. Se a lista contiver elementos que n�o s�o n�meros, eles s�o 
-  removidos da lista e n�o entram nas compara��es."
+  "Retorna o maior nï¿½mero da lista fornecido. Se a lista contiver elementos que nï¿½o sï¿½o nï¿½meros, eles sï¿½o 
+  removidos da lista e nï¿½o entram nas comparaï¿½ï¿½es."
   (reduce #'max (remove-if-not #'numberp lista))
 )
 
 ;; (numero-maximo-lista '(NIL 25 54 89 21 8 36 14 41 96)) -> 96
 
 (defun junta-duas-listas (lista1 lista2)
-  "Esta fun��o junta duas listas numa s�. Se a primeira lista tiver 0 elementos, ele retorna a lista2 apenas."
+  "Esta função junta duas listas numa só. Se a primeira lista tiver 0 elementos, ele retorna a lista2 apenas."
   (cond
       ((null lista1) lista2)
       ((null lista2) lista1) 
@@ -187,7 +187,7 @@ substituir-posicao definida anteriormente. |#
 )
 
 (defun tabuleiro-numa-lista (tabuleiro)
-  "Esta fun��o transforma o tabuleiro (uma lista de listas) numa s� lista."
+  "Esta função transforma o tabuleiro (uma lista de listas) numa só lista."
   (cond 
       ((null tabuleiro) NIL)
       (T (junta-duas-listas (car tabuleiro)(tabuleiro-numa-lista (cdr tabuleiro))))
@@ -195,7 +195,7 @@ substituir-posicao definida anteriormente. |#
 )
 
 (defun pontos-no-tabuleiro (tabuleiro)
-  "Soma todos os pontos dispon�veis dentro do tabuleiro fornecido."
+  "Soma todos os pontos disponï¿½veis dentro do tabuleiro fornecido."
   (reduce #'+(remove-if-not #'numberp(tabuleiro-numa-lista tabuleiro)))
 )
 
@@ -251,7 +251,7 @@ substituir-posicao definida anteriormente. |#
 )
 
 (defun sucessores-tabuleiro-inicial (no lista-valores-disponiveis)
-  "Esta fun��o cria n�s para todas as possiveis primerias jogadas"
+  "Esta função cria nós para todas as possiveis primerias jogadas"
   (cond
    ((null lista-valores-disponiveis) nil)
    (t (cons 
@@ -268,36 +268,36 @@ substituir-posicao definida anteriormente. |#
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun numero-simetrico (numero)
-  "Se o n�mero tem dois d�gitos diferentes, retorna o n�mero sim�trico. 
-   Caso contr�rio, retorna nil."
-  (if (and (>= numero 10) (<= numero 99)) ; Verifica se o n�mero tem dois d�gitos
+  "Se o número tem dois dígitos diferentes, retorna o número simétrico. 
+   Caso contrário, retorna nil."
+  (if (and (>= numero 10) (<= numero 99)) ; Verifica se o número tem dois dígitos
     (let ((digito1 (mod numero 10))
           (digito2 (floor numero 10)))
-      (if (/= digito1 digito2) ; Verifica se os d�gitos s�o diferentes.
-        (+ (* digito1 10) digito2))))) ; Retorna o n�mero sim�trico se os d�gitos forem diferentes.
+      (if (/= digito1 digito2) ; Verifica se os dígitos são diferentes.
+        (+ (* digito1 10) digito2))))) ; Retorna o número simétrico se os dígitos forem diferentes.
 
 ;; (numero-simetrico 57) -> 75
-;; (numero-simetrico 44) -> nil (n�meros iguais)
-;; (numero-simetrico 123) -> nil (n�o � um n�mero de dois d�gitos)
+;; (numero-simetrico 44) -> nil (números iguais)
+;; (numero-simetrico 123) -> nil (não é um número de dois dígitos)
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun numero-duplo (numero)
-  "Verifica se o n�mero fornecido � um n�mero duplo (dois d�gitos iguais).
-   Retorna T (true) se for um n�mero duplo, caso contr�rio retorna NIL (false)."
+  "Verifica se o número fornecido é um número duplo (dois dígitos iguais).
+   Retorna T (true) se for um número duplo, caso contrário retorna NIL (false)."
   (and (not (null numero))
        (not (eq numero T))
-       (>= numero 10) (<= numero 99) ; Verifica se o n�mero tem dois d�gitos
-       (= (mod numero 10) (floor numero 10)))) ; Verifica se os dois d�gitos s�p iguais.
+       (>= numero 10) (<= numero 99) ; Verifica se o número tem dois dígitos
+       (= (mod numero 10) (floor numero 10)))) ; Verifica se os dois dígitos sãp iguais.
 
 ;; (numero-duplo 44) -> T
 ;; (numero-duplo 57) -> NIL
-;; (numero-duplo 123) -> NIL (n�o � um n�mero de dois d�gitos)
+;; (numero-duplo 123) -> NIL (não é um número de dois dígitos)
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun duplos-existentes(lista)
-  "Retorna uma lista dos n�meros duplos que existem numa lista."
+  "Retorna uma lista dos números duplos que existem numa lista."
   (cond 
       ((null lista) '())
       ((numero-duplo (car lista))
@@ -312,7 +312,7 @@ substituir-posicao definida anteriormente. |#
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun duplos-existentes-ordenados (tabuleiro)
-  "Retorna uma lista de todos os n�meros duplos existentes no tabuleiro ordenados"
+  "Retorna uma lista de todos os nï¿½meros duplos existentes no tabuleiro ordenados"
   (sort (duplos-existentes (tabuleiro-numa-lista tabuleiro)) #'>)
 )
 
@@ -321,18 +321,18 @@ substituir-posicao definida anteriormente. |#
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun maximo-duplo (tabuleiro)
-  "Retorna o maior n�mero duplo que existe no tabuleiro"
+  "Retorna o maior nï¿½mero duplo que existe no tabuleiro"
   (numero-maximo-lista (duplos-existentes-ordenados tabuleiro))
 )
 
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun movimento-valido (linha coluna tabuleiro)
-  "Verifica se a posi��o para onde se pretende movimentar � v�lida. Retorna T em caso de ser v�lido,
-   Caso contr�rio retornar� NIL."
+  "Verifica se a posiï¿½ï¿½o para onde se pretende movimentar ï¿½ vï¿½lida. Retorna T em caso de ser vï¿½lido,
+   Caso contrï¿½rio retornarï¿½ NIL."
   (and (>= linha 0)(<= linha 9)
-       (>= coluna 0)(<= coluna 9) ;; Verifica se a coluna e linha est�o entre 0 e 9
-       (not (null (celula linha coluna tabuleiro))) ;; Verifica se a celula para onde se movimenta n�o est� a NIL
+       (>= coluna 0)(<= coluna 9) ;; Verifica se a coluna e linha estï¿½o entre 0 e 9
+       (not (null (celula linha coluna tabuleiro))) ;; Verifica se a celula para onde se movimenta nï¿½o estï¿½ a NIL
   )
 )
 
@@ -342,8 +342,8 @@ substituir-posicao definida anteriormente. |#
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun posicao-valor (valor tabuleiro &optional (line 0))
-  "Verifica se a posi��o para onde se pretende movimentar � v�lida. Retorna T em caso de ser v�lido,
-   Caso contr�rio retornar� NIL."
+  "Verifica se a posiï¿½ï¿½o para onde se pretende movimentar ï¿½ vï¿½lida. Retorna T em caso de ser vï¿½lido,
+   Caso contrï¿½rio retornarï¿½ NIL."
   (if (or (null tabuleiro) (> line 9))
       NIL
       (let* 
@@ -383,15 +383,15 @@ substituir-posicao definida anteriormente. |#
 
 
 (defun lista-operadores ()
-  "Cria uma lista com todos os n�meros dos operadores."
+  "Cria uma lista com todos os números dos operadores."
   (list 1 2 3 4 5 6 7 8))
 
 
 
 (defun escolhe-operador (tabuleiro numero-operador)
   (if (or (< numero-operador 1) (> numero-operador 8))
-      (format t "N�mero do operador inv�lido. Deve ser entre 1 e 8.~%")
- (let ((novo-tabuleiro (copy-list tabuleiro))) ; Cria uma c�pia do tabuleiro
+      (format t "Nï¿½mero do operador invï¿½lido. Deve ser entre 1 e 8.~%")
+ (let ((novo-tabuleiro (copy-list tabuleiro))) ; Cria uma cópia do tabuleiro
       (cond
         ((= numero-operador 1) (operador-geral novo-tabuleiro 2 -1))
         ((= numero-operador 2) (operador-geral novo-tabuleiro 2 1))
@@ -401,7 +401,7 @@ substituir-posicao definida anteriormente. |#
         ((= numero-operador 6) (operador-geral novo-tabuleiro -2 -1))
         ((= numero-operador 7) (operador-geral novo-tabuleiro -1 -2))
         ((= numero-operador 8) (operador-geral novo-tabuleiro 1 -1))
-        (t (format t "Operador n�o implementado.~%")))
+        (t (format t "Operador não implementado.~%")))
    )
  )
 )
@@ -417,14 +417,14 @@ substituir-posicao definida anteriormente. |#
            (movimento-e-valido (movimento-valido nova-linha nova-coluna tabuleiro)))
       (if (eq movimento-e-valido NIL)
           (progn
-            #|(format t "Movimento inv�lido.~%")|#
-            NIL) ; Retorna NIL se o movimento n�o for v�lido
+            #|(format t "Movimento inválido.~%")|#
+            NIL) ; Retorna NIL se o movimento não for válido
         (let* ((simetrico (numero-simetrico (celula nova-linha nova-coluna tabuleiro)))
                (posicao-simetrico (posicao-valor simetrico tabuleiro))
                (e-duplo (numero-duplo (celula nova-linha nova-coluna tabuleiro)))
                (maximo-duplo (maximo-duplo tabuleiro))
                (posicao-duplo (posicao-valor maximo-duplo tabuleiro))
-               (novo-tabuleiro tabuleiro)) ; Mant�m uma refer�ncia ao tabuleiro atual
+               (novo-tabuleiro tabuleiro)) ; Mantém uma referência ao tabuleiro atual
           (cond 
            ((eq e-duplo T)
             (setf novo-tabuleiro (substituir (first posicao-cavalo-final) (second posicao-cavalo-final)
@@ -436,56 +436,56 @@ substituir-posicao definida anteriormente. |#
                            (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
                                        (substituir (first posicao-simetrico) (second posicao-simetrico) tabuleiro NIL)
                                        NIL) 'T))))
-          (list novo-tabuleiro posicao-cavalo-final)))))) ; Retorna o novo tabuleiro e a nova posi��o do cavalo
+          (list novo-tabuleiro posicao-cavalo-final)))))) ; Retorna o novo tabuleiro e a nova posição do cavalo
 
 
 
 #|-----------------------------------------------------------------------------------------------------------|#
-#|---------------------------------------------------- N�S --------------------------------------------------|#
+#|---------------------------------------------------- NÓS --------------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun criar-no(tabuleiro posicao-do-cavalo pontuacao-atual profundidade no-pai &optional(heuristica 0))
-  "Fun��o respons�vel para criar um n�
-   Estrutura do n�: Estado do tabuleiro - Posicao atual do cavalo - Pontua��o obtida - Profundidade (equivale
-   �s jogadas feitas) - Estado anterior do tabuleiro - Heuristica utilizada."
+  "Função responsável para criar um nó
+   Estrutura do nó: Estado do tabuleiro - Posicao atual do cavalo - Pontuação obtida - Profundidade (equivale
+   às jogadas feitas) - Estado anterior do tabuleiro - Heuristica utilizada."
   (list tabuleiro posicao-do-cavalo pontuacao-atual profundidade no-pai heuristica)
 )
 
 (defun estado-tabuleiro(no)
-  "Fun��o respons�vel por mostrar o estado do tabuleiro no n� fornecido."
+  "Função responsável por mostrar o estado do tabuleiro no nó fornecido."
   (first no)
 )
 
 (defun posicao-do-cavalo-atual(no)
-  "Fun��o respons�vel por mostrar a posicao atual onde est� o cavalo."
+  "Função responsável por mostrar a posicao atual onde está o cavalo."
   (second no)
 )
 
 (defun pontuacao-atual(no)
-  "Fun��o respons�vel por mostrar quantos pontos j� se tem no n�."
+  "Função responsável por mostrar quantos pontos já se tem no nó."
   (third no)
 )
 
 (defun profundidade(no)
-  "Fun��o respons�vel por mostrar a profundidade do n� que representa as jogadas feitas at� chegar aquele
+  "Função responsável por mostrar a profundidade do nó que representa as jogadas feitas até chegar aquele
    estado"
   (fourth no)
 )
 
 (defun no-pai(no)
-  "Fun��o respons�vel por mostrar o n� pai deste, ou seja, o estado do tabuleiro anterior a ter se jogado 
+  "Função responsável por mostrar o nó pai deste, ou seja, o estado do tabuleiro anterior a ter se jogado 
    para chegar aquele estado"
   (fifth no)
 )
 
 (defun no-heuristica(no)
-  "Fun��o respons�vel por mostrar a heuristica"
+  "Função responsável por mostrar a heuristica"
   (sixth no)
 )
 
 
 (defun atingiu-objetivo? (no)
-  "Verifica se o n� atual atingiu o objetivo do problema."
+  "Verifica se o nó atual atingiu o objetivo do problema."
   (let ((objetivo (obter-objetivo)))
     (and objetivo (numberp objetivo) (>= (pontuacao-atual no) objetivo))))
 
@@ -514,12 +514,12 @@ substituir-posicao definida anteriormente. |#
      )
 
      #| HEURISTICA DADA PELO PROFESSOR - BASE 
-       h(x) = o(x)/m(x) -> Privelegia casas com maior n�mero de pontos.
-       m(x) = M�dia de pontos no tabuleiro.
-       o(x) = N�mero de pontos que falta para atingir objetivo.
+       h(x) = o(x)/m(x) -> Privelegia casas com maior nómero de pontos.
+       m(x) = Média de pontos no tabuleiro.
+       o(x) = Número de pontos que falta para atingir objetivo.
       |#
      (defun m-base (no)
-       "Esta Fun��o calcula o m(x) da heuristica base consoante o estado do tabuleiro. Se as casas disponiveis ou os pontos no tabuleiro forem 0, ent�o o m ser� 0 tamb�m."
+       "Esta Função calcula o m(x) da heuristica base consoante o estado do tabuleiro. Se as casas disponiveis ou os pontos no tabuleiro forem 0, então o m será 0 também."
        (if (or(eq (pontos-no-tabuleiro (estado-tabuleiro no)) 0) (eq (posicoes-livres-tabuleiro (estado-tabuleiro no)) 0))
            0
          (float (/ (pontos-no-tabuleiro (estado-tabuleiro no)) (posicoes-livres-tabuleiro (estado-tabuleiro no))))
@@ -527,7 +527,7 @@ substituir-posicao definida anteriormente. |#
      )
 
      (defun o-base (no)
-       "Esta Fun��o calcula o o(x) da heuristica base consoante o estado do tabuleiro. Ou seja, para sabermos os pontos conseguidos, percisamos do n�. Tendo o n�, podemos recorrer diretamente a uma das propriedades do n�, a pontua��o."
+       "Esta Função calcula o o(x) da heuristica base consoante o estado do tabuleiro. Ou seja, para sabermos os pontos conseguidos, percisamos do nó. Tendo o nó, podemos recorrer diretamente a uma das propriedades do nó, a pontuação."
        (if (eq (obter-objetivo) nil)
            NIL
          (float (/ (pontos-no-tabuleiro (estado-tabuleiro no)) (posicoes-livres-tabuleiro (estado-tabuleiro no))))
@@ -535,7 +535,7 @@ substituir-posicao definida anteriormente. |#
      )
      
      (defun h-base (no)
-       "Esta Fun��o calcula a heuristica do n�, usando o estado do tabuleiro do n�."
+       "Esta Função calcula a heuristica do nó, usando o estado do tabuleiro do nó."
        (if (or(eq (o-base no) 0) (eq (m-base no) 0))
            0
            (float (/ (o-base no) (m-base no)))
@@ -549,7 +549,7 @@ substituir-posicao definida anteriormente. |#
 #|-----------------------------------------------------------------------------------------------------------|#
 #|-------------------------------------------------- PROBLEMA -----------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
-#| Isto permite que a variavel do problema esteja escondida e n�o seja manipul�vel por qualquer um. As fun��ess ficam definidas dentro da closure do problema para essas fun��ess conseguirem manipular o problema.|#
+#| Isto permite que a variavel do problema esteja escondida e não seja manipulável por qualquer um. As funçõess ficam definidas dentro da closure do problema para essas funçõess conseguirem manipular o problema.|#
 
 (let ((problema nil))
      (defun definir-objetivo(problema-pretendido)
@@ -577,18 +577,18 @@ substituir-posicao definida anteriormente. |#
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun inicializar-cavalo (tabuleiro &optional (coluna 0))
-  "Coloca o cavalo na coluna selecionada para a primeira jogada e retorna o valor original da c�lula."
+  "Coloca o cavalo na coluna selecionada para a primeira jogada e retorna o valor original da célula."
   (let ((novo-tabuleiro (copy-list tabuleiro))
-        (valor-celula-original (celula 0 coluna tabuleiro))) ; Sempre obt�m o valor original da c�lula
+        (valor-celula-original (celula 0 coluna tabuleiro))) ; Sempre obtém o valor original da célula
     (cond
       ((or (> coluna 9) (< coluna 0))
         (progn
-          (format t "Coluna inv�lida.~%")
-          (values novo-tabuleiro valor-celula-original))) ; Retorna o tabuleiro sem mudan�as e valor da c�lula
+          (format t "Coluna inválida.~%")
+          (values novo-tabuleiro valor-celula-original))) ; Retorna o tabuleiro sem mudanças e valor da célula
       ((not (eq (posicao-cavalo novo-tabuleiro) NIL))
         (progn
-          (format t "Cavalo j� colocado.~%")
-          (values novo-tabuleiro valor-celula-original))) ; Retorna o tabuleiro sem mudan�as e valor da c�lula
+          (format t "Cavalo já colocado.~%")
+          (values novo-tabuleiro valor-celula-original))) ; Retorna o tabuleiro sem mudanças e valor da célula
       (T
         (let* ((nova-linha 0)
                (nova-coluna coluna)
@@ -599,7 +599,7 @@ substituir-posicao definida anteriormente. |#
                (maximo-duplo (maximo-duplo novo-tabuleiro))
                (posicao-duplo (posicao-valor maximo-duplo novo-tabuleiro)))
           (setq valor-celula-original valor-celula)
-(format t "Cavalo sendo colocado na casa com ~A pontos.~%" valor-celula-original) ; Imprime o n�mero de pontos
+(format t "Cavalo sendo colocado na casa com ~A pontos.~%" valor-celula-original) ; Imprime o número de pontos
           (cond
             ((eq e-duplo T)
               (setf (nth nova-coluna (nth nova-linha novo-tabuleiro)) 'T)
@@ -612,7 +612,7 @@ substituir-posicao definida anteriormente. |#
 
 
 (defun expandir-no (no)
-  "Expande um n� gerando todos os poss�veis sucessores baseados nos movimentos do cavalo."
+  "Expande um nó gerando todos os possíveis sucessores baseados nos movimentos do cavalo."
   (let ((tabuleiro-atual (estado-tabuleiro no))
         (pontuacao-atual (pontuacao-atual no))
         (profundidade-atual (profundidade no))
@@ -626,10 +626,10 @@ substituir-posicao definida anteriormente. |#
           (let ((valor-celula (celula (first nova-posicao) (second nova-posicao) tabuleiro-atual)))
             (when (numberp valor-celula)
               (let ((nova-pontuacao (+ pontuacao-atual valor-celula)))
-                (format t "Pontos obtidos: ~A, Pontua��o total: ~A ~%" valor-celula nova-pontuacao)
+                (format t "Pontos obtidos: ~A, Pontuação total: ~A ~%" valor-celula nova-pontuacao)
                 (push (criar-no novo-tabuleiro nova-posicao nova-pontuacao (1+ profundidade-atual) no) sucessores)))))))
     (if (null sucessores)
-        (format t "N�o h� mais movimentos poss�veis a partir desta posi��o. ~%"))
+        (format t "Não há mais movimentos possíveis a partir desta posição. ~%"))
     sucessores))
 
 #|-----------------------------------------------------------------------------------------------------------|#
@@ -638,15 +638,15 @@ substituir-posicao definida anteriormente. |#
 
 #|
 - Utiliza uma estrutura de dados tipo fila (abertos).
-- Explora os n�s em um n�vel antes de passar para o pr�ximo n�vel.
+- Explora os nós em um nível antes de passar para o próximo nível.
 - Adiciona sucessores no final da fila (nconc abertos (list sucessor)).
 |#
 
 (defun bfs-recursivo (fila fechados nos-gerados nos-expandidos)
-  "Fun��o recursiva auxiliar para BFS. Processa n�s de forma recursiva."
-  (if (null fila) ; Checa se a fila est� vazia
+  "Função recursiva auxiliar para BFS. Processa nós de forma recursiva."
+  (if (null fila) ; Checa se a fila está vazia
       (let ((fator-ramificacao-media (calcular-fator-ramificacao-media nos-gerados nos-expandidos)))
-        (format t "Fator de Ramifica��o M�dia: ~A ~%" fator-ramificacao-media)
+        (format t "Fator de Ramificação Média: ~A ~%" fator-ramificacao-media)
         (list 'Failure nos-gerados nos-expandidos fator-ramificacao-media)) ; Retorna falha com contadores e fator
       (let* ((no-atual (first fila))
              (resto-fila (rest fila))
@@ -662,10 +662,10 @@ substituir-posicao definida anteriormente. |#
 
 
 #|
-- novos-abertos � uma lista local usada para acumular os sucessores que ainda n�o foram explorados.
+- novos-abertos é uma lista local usada para acumular os sucessores que ainda não foram explorados.
 - Utilizamos nconc para concatenar novos-abertos ao final de abertos. Como nconc modifica a lista original, 
 usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
-- A fun��o ent�o chama a si mesma recursivamente com a nova lista de abertos e a lista de fechados atualizada.
+- A função então chama a si mesma recursivamente com a nova lista de abertos e a lista de fechados atualizada.
 |#
 
 (defun bfs (tabuleiro-problema)
@@ -675,8 +675,9 @@ usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
          (pontuacao-inicial (+ (if (numberp valor-celula-inicial) valor-celula-inicial 0) 2))
          (abertos (list (criar-no tabuleiro-inicializado (posicao-cavalo tabuleiro-inicializado) pontuacao-inicial 0 nil)))
          (tempo-execucao (* (medir-tempo-execucao 'bfs-recursivo abertos '() 0 0) 1000))) ; Convertendo para milissegundos
-    (format t "Tempo de execu��o: ~A milissegundos~%" tempo-execucao)
+    (format t "Tempo de execução: ~A milissegundos~%" tempo-execucao)
     tempo-execucao))
+
 
 
 #|-----------------------------------------------------------------------------------------------------------|#
@@ -685,12 +686,12 @@ usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
 
 #|
 - Utiliza uma estrutura de dados tipo pilha (abertos).
-- Explora profundamente cada caminho poss�vel antes de recuar.
+- Explora profundamente cada caminho possível antes de recuar.
 - Adiciona sucessores no topo da pilha (push sucessor abertos).
 |#
 
 (defun dfs-recursivo (abertos fechados nos-gerados nos-expandidos)
-  "Fun��o recursiva auxiliar para DFS. Processa n�s de forma recursiva."
+  "Função recursiva auxiliar para DFS. Processa nós de forma recursiva."
   (if abertos
       (let ((no-atual (pop abertos)))
         (incf nos-expandidos)
@@ -699,13 +700,13 @@ usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
             (incf nos-gerados)
             (if (atingiu-objetivo? sucessor)
                 (let ((fator-ramificacao-media (calcular-fator-ramificacao-media nos-gerados nos-expandidos)))
-                  (format t "Fator de Ramifica��o M�dia (DFS): ~A~%" fator-ramificacao-media)
+                  (format t "Fator de Ramificação Média (DFS): ~A~%" fator-ramificacao-media)
                   (return (list 'Success sucessor nos-gerados nos-expandidos fator-ramificacao-media)))
                 (push sucessor abertos))))
         (push no-atual fechados)
         (dfs-recursivo abertos fechados nos-gerados nos-expandidos))
       (let ((fator-ramificacao-media (calcular-fator-ramificacao-media nos-gerados nos-expandidos)))
-        (format t "Fator de Ramifica��o M�dia (DFS): ~A~%" fator-ramificacao-media)
+        (format t "Fator de Ramificação Média (DFS): ~A~%" fator-ramificacao-media)
         (list 'Failure nos-gerados nos-expandidos fator-ramificacao-media))))
 
 
@@ -719,7 +720,7 @@ usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
          (resultado (dfs-recursivo (list (criar-no tabuleiro-inicializado (posicao-cavalo tabuleiro-inicializado) pontuacao-inicial 0 nil)) '() 0 0))
          (end-time (get-internal-real-time))
          (tempo-execucao (* (/ (- end-time start-time) internal-time-units-per-second) 1000)))
-    (format t "Tempo de execu��o (DFS): ~A milissegundos~%" tempo-execucao)
+    (format t "Tempo de execução (DFS): ~A milissegundos~%" tempo-execucao)
     resultado))
 
 
@@ -728,13 +729,13 @@ usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun f (no)
-  "Calcula a fun��o de avalia��o f para o n� usando a heur�stica escolhida."
+  "Calcula a função de avaliação f para o nó usando a heurística escolhida."
   (let ((heuristica (obter-heuristica)))
     (if (functionp heuristica)
-        (+ (profundidade no) ; g(n): custo do caminho do n� inicial at� n
-           (funcall heuristica no)) ; h(n): heur�stica do n� at� o objetivo
+        (+ (profundidade no) ; g(n): custo do caminho do nó inicial até n
+           (funcall heuristica no)) ; h(n): heurística do nó até o objetivo
         (profundidade no)))
-) ; Se n�o houver heur�stica, usa apenas g(n)
+) ; Se não houver heurística, usa apenas g(n)
 
 (defun merge-sort (list)
   (if (small list) list
@@ -751,16 +752,16 @@ usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
   (ldiff list (right-half list)))
 
 (defun merge-lists (list1 list2)
-  "Funde duas listas de n�s ordenadas com base na fun��o de avalia��o f."
+  "Funde duas listas de nós ordenadas com base na função de avaliação f."
   (merge 'list list1 list2 (lambda (no1 no2) (< (f no1) (f no2)))))
 
 
 (defun a-estrela-recursivo (abertos fechados nos-gerados nos-expandidos)
-  "Fun��o recursiva auxiliar para o algoritmo A*."
+  "Função recursiva auxiliar para o algoritmo A*."
   (block a-estrela-bloco
     (if (null abertos)
         (let ((fator-ramificacao-media (calcular-fator-ramificacao-media nos-gerados nos-expandidos)))
-          (format t "Fator de Ramifica��o M�dia (A*): ~A~%" fator-ramificacao-media)
+          (format t "Fator de Ramificação Média (A*): ~A~%" fator-ramificacao-media)
           (list 'Failure nos-gerados nos-expandidos fator-ramificacao-media))
         (let* ((no-atual (first abertos))
                (abertos-restantes (rest abertos))
@@ -768,7 +769,7 @@ usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
           (incf nos-expandidos)
           (when (atingiu-objetivo? no-atual)
             (let ((fator-ramificacao-media (calcular-fator-ramificacao-media nos-gerados nos-expandidos)))
-              (format t "Fator de Ramifica��o M�dia (A*): ~A~%" fator-ramificacao-media)
+              (format t "Fator de Ramificação Média (A*): ~A~%" fator-ramificacao-media)
               (return-from a-estrela-bloco (list 'Success no-atual nos-gerados nos-expandidos fator-ramificacao-media))))
           (dolist (sucessor sucessores)
             (unless (find sucessor fechados :test #'equal)
@@ -788,12 +789,12 @@ usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
          (resultado (a-estrela-recursivo (list (criar-no tabuleiro-inicializado (posicao-cavalo tabuleiro-inicializado) pontuacao-inicial 0 nil)) '() 0 0))
          (end-time (get-internal-real-time))
          (tempo-execucao (* (/ (- end-time start-time) internal-time-units-per-second) 1000)))
-    (format t "Tempo de execu��o (A*): ~A milissegundos~%" tempo-execucao)
+    (format t "Tempo de execução (A*): ~A milissegundos~%" tempo-execucao)
     resultado))
 
 
 #|-----------------------------------------------------------------------------------------------------------|#
-#|------------------------------------------- ESTAT�STICAS DE DADOS -----------------------------------------|#
+#|------------------------------------------- ESTATÍSTICAS DE DADOS -----------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
 
 (defun medir-tempo-execucao (funcao &rest args)
