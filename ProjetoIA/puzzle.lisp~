@@ -189,6 +189,19 @@ substituir-posicao definida anteriormente. |#
       (T (junta-duas-listas (car tabuleiro)(tabuleiro-numa-lista (cdr tabuleiro))))
   )
 )
+
+(defun pontos-no-tabuleiro (tabuleiro)
+  "Soma todos os pontos disponíveis dentro do tabuleiro fornecido."
+  (reduce #'+(remove-if-not #'numberp(tabuleiro-numa-lista tabuleiro)))
+)
+
+(defun posicoes-livres-tabuleiro (tabuleiro)
+  "Conta quantas casas livres (diferentes de NIL e de T) existentes no tabuleiro."
+  (count-if (lambda (celula) (and (not (eq celula NIL))(not (eq celula 'T))))
+            (tabuleiro-numa-lista tabuleiro)
+  )
+)
+
 #|-----------------------------------------------------------------------------------------------------------|#
 #|----------------------------------------------------REGRAS-------------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
@@ -283,11 +296,61 @@ substituir-posicao definida anteriormente. |#
 #|--------------------------------------------------OPERADORES-----------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
 
-(defun inicializar-cavalo (tabuleiro)
-  "Coloca o cavalo na primeira posição do tabuleiro se ele não estiver presente."
-  (unless (posicao-cavalo tabuleiro)
-    (setf (car (car tabuleiro)) 'T))
-  tabuleiro)
+(defun inicializar-cavalo (tabuleiro &optional (coluna 0))
+  "Coloca o cavalo na coluna selecionada para a primeira jogada. Caso não seja informada a coluna, ele coloca
+   na posição (0 0). Caso seja fornecida uma coluna inválida, ele informa que a coluna é invalida."
+  (cond 
+       ((or(> coluna 9)(< coluna 0))
+        (format t "Coluna inválida.~%"))
+       ((not (eq (posicao-cavalo tabuleiro) NIL))
+         (format t "Cavalo já colocado.~%"))
+       (T
+           (let* 
+               (
+                   (nova-linha 0)
+                   (nova-coluna coluna)
+                   (posicao-cavalo-final (list nova-linha nova-coluna))
+                   (simetrico (numero-simetrico (celula nova-linha nova-coluna tabuleiro)))
+                   (posicao-simetrico (posicao-valor simetrico tabuleiro))
+                   (e-duplo (numero-duplo (celula nova-linha nova-coluna tabuleiro)))
+                   (maximo-duplo (maximo-duplo tabuleiro))
+                   (posicao-duplo (posicao-valor maximo-duplo tabuleiro))
+               )
+               (cond 
+                   ((eq e-duplo T)
+                       (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
+                           (substituir nova-linha nova-coluna
+                               (substituir (first posicao-duplo)(second posicao-duplo) tabuleiro 
+                                            NIL)
+                                       NIL)
+                                    T)
+                   )
+                   (T
+                       (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
+                           (substituir nova-linha nova-coluna
+                               (substituir (first posicao-simetrico)(second posicao-simetrico) tabuleiro 
+                                            NIL)
+                                       NIL)
+                                    T)
+                   )
+               )
+           )
+       )
+  )
+)
+
+;; (inicializar-cavalo (tabuleiro-teste) 10)
+;; (inicializar-cavalo (tabuleiro-teste) 7)
+
+(defun limpar-cavalos (tabuleiro)
+  "Remove todos os cavalos ('T') do tabuleiro, substituindo-os por nil."
+  (mapcar (lambda (linha) 
+            (mapcar (lambda (celula) 
+                      (if (eql celula 'T) nil celula))
+                    linha))
+          tabuleiro))
+
+;; (limpar-cavalos (tabuleiro-teste))
 
 (defun lista-operadores ()
   "Cria uma lista com todos os operadores."
@@ -362,15 +425,127 @@ substituir-posicao definida anteriormente. |#
         )
       )
     )
-)
+  )
 
 #|-----------------------------------------------------------------------------------------------------------|#
 #|---------------------------------------------------- NÓS --------------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
+(defun criar-no(tabuleiro posicao-do-cavalo pontuacao-atual profundidade no-pai &optional(heuristica 0))
+  "Função responsável para criar um nó.
+   Estrutura do nó: Estado do tabuleiro - Posicao atual do cavalo - Pontuaçao obtida - Profundidade (equivale
+   às jogadas feitas) - Estado anterior do tabuleiro - Heuristica utilizada."
+  (list tabuleiro posicao-do-cavalo pontuacao-atual profundidade no-pai heuristica)
+)
+
+(defun estado-tabuleiro(no)
+  "Função responsável por mostrar o estado do tabuleiro no nó fornecido."
+  (first no)
+)
+
+(defun posicao-do-cavalo-atual(no)
+  "Função responsável por mostrar a posicao atual onde está o cavalo."
+  (second no)
+)
+
+(defun pontuacao-atual(no)
+  "Função responsável por mostrar quantos pontos já se tem no nó."
+  (third no)
+)
+
+(defun profundidade(no)
+  "Função responsável por mostrar a profundidade do nó que representa as jogadas feitas até chegar aquele
+   estado"
+  (fourth no)
+)
+
+(defun no-pai(no)
+  "Função responsável por mostrar o nó pai deste, ou seja, o estado do tabuleiro anterior a ter se jogado 
+   para chegar aquele estado"
+  (fifth no)
+)
+
+(defun no-heuristica(no)
+  "Função responsável por mostrar a heuristica "
+  (sixth no)
+)
 
 
 
 
+#|-----------------------------------------------------------------------------------------------------------|#
+#|------------------------------------------------- HEURISTICA ----------------------------------------------|#
+#|-----------------------------------------------------------------------------------------------------------|#
+(let ((heuristica-escolhida nil))
+     (defun definir-heuristica(heuristica-pretendida)
+       (setf heuristica-escolhida heuristica-pretendida)
+     )
+     (defun obter-heuristica() 
+         (case heuristica-escolhida
+             ('base 'h-base)
+             ('implementada NIL)
+             (otherwise NIL)
+         )
+     )
+
+     #| HEURISTICA DADA PELO PROFESSOR - BASE 
+       h(x) = o(x)/m(x) -> Privelegia casas com maior número de pontos.
+       m(x) = Média de pontos no tabuleiro.
+       o(x) = Número de pontos que falta para atingir objetivo.
+      |#
+     (defun m-base (no)
+       "Esta função calcula o m(x) da heuristica base consoante o estado do tabuleiro. Se as casas disponiveis ou os pontos no tabuleiro forem 0, então o m será 0 também."
+       (if (or(eq (pontos-no-tabuleiro (estado-tabuleiro no)) 0) (eq (posicoes-livres-tabuleiro (estado-tabuleiro no)) 0))
+           0
+         (float (/ (pontos-no-tabuleiro (estado-tabuleiro no)) (posicoes-livres-tabuleiro (estado-tabuleiro no))))
+         )
+     )
+
+     (defun o-base (no)
+       "Esta função calcula o o(x) da heuristica base consoante o estado do tabuleiro. Ou seja, para sabermos os pontos conseguidos, percisamos do nó. Tendo o nó, podemos recorrer diretamente a uma das propriedades do nó, a pontuação."
+       (if (eq (obter-objetivo) nil)
+           NIL
+         (float (/ (pontos-no-tabuleiro (estado-tabuleiro no)) (posicoes-livres-tabuleiro (estado-tabuleiro no))))
+         )
+     )
+     
+     (defun h-base (no)
+       "Esta função calcula a heuristica do nó, usando o estado do tabuleiro do nó."
+       (if (or(eq (o-base no) 0) (eq (m-base no) 0))
+           0
+           (float (/ (o-base no) (m-base no)))
+       )
+     )
+)
+
+
+
+
+#|-----------------------------------------------------------------------------------------------------------|#
+#|-------------------------------------------------- PROBLEMA -----------------------------------------------|#
+#|-----------------------------------------------------------------------------------------------------------|#
+#| Isto permite que a variavel do problema esteja escondida e não seja manipulável por qualquer um. As funções ficam definidas dentro da closure do problema para essas funções conseguirem manipular o problema.|#
+(let ((problema nil))
+     (defun definir-objetivo(problema-pretendido)
+       (setf problema problema-pretendido)
+     )
+     (defun obter-objetivo() 
+         (case problema
+             ('A 70)
+             ('B 60)
+             ('C 270)
+             ('D 600)
+             ('E 300)
+             ('F 2000)
+             (otherwise NIL)
+         )
+     )
+     (defun obter-problema ()           
+         (cond
+             ((eq problema NIL) NIL)
+             (T problema)
+         )
+     )
+)
 #|-----------------------------------------------------------------------------------------------------------|#
 #|---------------------------------------------------- TODO -------------------------------------------------|#
 #|-----------------------------------------------------------------------------------------------------------|#
@@ -378,7 +553,8 @@ substituir-posicao definida anteriormente. |#
 ;; -> falta fazer uma função que permita ao utilizador escolher a posição inicial do cavalo e a partir
 ;; daí resolver de acordo com o algoritmo selecionado.
 
-
+#|-----------------------------------------------------------------------------------------------------------|#
+#|
 (defun obter-objetivo (problema)
   "Retorna o objetivo de pontos para o problema dado."
   (case problema
@@ -388,9 +564,13 @@ substituir-posicao definida anteriormente. |#
     ('D 600)
     ('E 300)
     ('F 2000)
-    (otherwise (error "Problema não definido ou inválido."))))
+    (otherwise (error "Problema não definido ou inválido.")))) |#
 
-;; Definindo a função para verificar se pode adicionar pontos
+;; (obter-objetivo 'A) -> 70
+
+#|-----------------------------------------------------------------------------------------------------------|#
+
+;; Função para verificar se pode adicionar pontos
 (defun pode-adicionar-pontos? (pontos-atuais pontos-casa limite)
   "Verifica se é possível adicionar os pontos da casa aos pontos atuais, sem ultrapassar o objetivo do problema"
   (let ((novo-total (+ pontos-atuais pontos-casa)))
@@ -399,13 +579,15 @@ substituir-posicao definida anteriormente. |#
 ;; (pode-adicionar-pontos? 50 20 (obter-objetivo 'A)) -> T
 ;; (pode-adicionar-pontos? 50 25 (obter-objetivo 'A)) -> NIL
 
+#|-----------------------------------------------------------------------------------------------------------|#
+
 (defun somar-pontos (pontos-atuais pontos-casa)
   "Soma os pontos da casa atual aos pontos atuais e retorna o total."
   (+ pontos-atuais pontos-casa))
 
-
-
 ;; (somar-pontos 50 20) -> 70
+
+#|-----------------------------------------------------------------------------------------------------------|#
 
 ;; -> falta implementar BFS
 
@@ -437,7 +619,7 @@ Se algum dos sucessores é um nó objectivo sai, e dá a solução. Caso contrário va
 
 ;; -> falta implementar A*
 
-
+#|-----------------------------------------------------------------------------------------------------------|#
 
 
 
