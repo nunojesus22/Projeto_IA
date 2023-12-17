@@ -5,6 +5,11 @@
 ;; "C:\\Users\\nunoj\\Documents\\DEV\\Projeto_IA\\ProjetoIA\\"
 ;; "C:\\Users\\johnn\\OneDrive\\Ambiente de Trabalho\\Projeto_IA\\ProjetoIA\\"
 
+(defun diretoria-solucao ()
+  "Define o caminho para os ficheiros do projeto a partir da raiz"
+  (let ((path "C:\\Users\\johnn\\OneDrive\\Ambiente de Trabalho\\Projeto_IA\\ProjetoIA\\solucao.dat"))
+    path))
+
 (defun play ()
   "Permite iniciar o programa carregando e compilando"
   (load (concatenate 'string (diretoria-atual) "problemas.dat" ))
@@ -179,8 +184,18 @@
                ;; Opção selecionada
                (format t "~% Opção ~a selecionada." escolha)
                (case escolha
-                 (1 (progn (format t "~% Aplicando o algoritmo BFS...: ~% ~%") (bfs(inicializar-cavalo problema-selecionado))))
-                 (2 (progn (format t "~% Aplicando o algoritmo DFS...: ~% ~%") (dfs(inicializar-cavalo problema-selecionado))))
+                (1 (progn 
+     (format t "~% Aplicando o algoritmo BFS...: ~% ~%")
+     ;; Apenas uma chamada para executar-e-capturar-bfs
+     (let ((bfs-output (executar-e-capturar-output #'bfs (inicializar-cavalo problema-selecionado))))
+       (escrever-menu-estatisticas problema-selecionado "BFS" bfs-output))
+   ))
+         (2 (progn 
+     (format t "~% Aplicando o algoritmo DFS...: ~% ~%")
+     ;; Apenas uma chamada para executar-e-capturar-dfs
+     (let ((dfs-output (executar-e-capturar-output #'dfs (inicializar-cavalo problema-selecionado))))
+       (escrever-menu-estatisticas problema-selecionado "DFS" dfs-output))
+   ))          
                  (3 (progn (format t "~% Abrindo o menu do algoritmo A* ...: ~% ~%") (menu-aestrela problema-selecionado)))
                  (4 (progn (format t "~% Voltando ao Menu Modo de Jogo...") (return)))
                  (T (progn (format t "~% Opção Inválida~% Opção => ") (setf escolha (read)))))))))))
@@ -215,7 +230,9 @@
                ;; Opção selecionada
                (format t "~% Opção ~a selecionada." escolha)
                (case escolha
-                 (1 (progn (format t "~% Aplicando o algoritmo A* com a h base.. ~% ") (definir-heuristica 'base)(a-estrela(inicializar-cavalo problema-selecionado))))
+                 (1 (progn (format t "~% Aplicando o algoritmo A* com a h base.. ~% ") (definir-heuristica 'base)(let ((a-estrela-output (executar-e-capturar-output #'a-estrela (inicializar-cavalo problema-selecionado))))
+       (escrever-menu-estatisticas problema-selecionado "A-ESTRELA" a-estrela-output))
+   ))          
                  (2 (progn (format t "~% Voltando ao Menu Algoritmos... ~% ") (return)))
                  (T (progn (format t "~% Opção Inválida~% Opção => ") (setf escolha (read)))))))))))
 
@@ -317,12 +334,35 @@
   )
 )
 
+(defun executar-e-capturar-output (funcao &rest args)
+  "Executa uma função e captura seu output, retornando-o como uma string."
+  (with-output-to-string (str)
+    (let ((*standard-output* str))  ; Redireciona o standard output para a string 'str'
+      (apply funcao args))))
 
 
+(defun executar-e-capturar-bfs (problema)
+  "Executa o algoritmo BFS e captura o output."
+  (with-output-to-string (str)
+    (bfs (inicializar-cavalo problema))))
+
+(defun executar-e-capturar-dfs (problema)
+  "Executa o algoritmo BFS e captura o output."
+  (with-output-to-string (str)
+    (dfs (inicializar-cavalo problema))))
+
+(defun executar-e-capturar-a-estrela (problema)
+  "Executa o algoritmo BFS e captura o output."
+  (with-output-to-string (str)
+    (a-estrela (inicializar-cavalo problema))))
 
 
-
-
+(defun escrever-menu-estatisticas (problema algoritmo output)
+  (with-open-file (stream (diretoria-solucao)
+                          :direction :output
+                          :if-exists :append
+                          :if-does-not-exist :create)
+    (format stream "~% ~% Problema: ~a~%Algoritmo: ~a~%Output: ~a~%" problema algoritmo output)))
 
 
 

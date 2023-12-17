@@ -121,13 +121,14 @@ Por default a lista serï¿½ o resultado obtido na alï¿½nea 4 (baralhar (lista-num
 #|Funï¿½ï¿½o que recebe um ï¿½ndice, uma lista e um valor (por default o valor ï¿½ NIL) esubstitui pelo valor pretendido 
 nessa posiï¿½ï¿½o.|#
 (defun substituir-posicao (coluna lista &optional (valor nil))
-  ;; Verifica se o ï¿½ndice ï¿½ negativo; se sim, retorna a lista original sem modificaï¿½ï¿½o
-  (if (< coluna 0)
-      lista
-      ;; Divide a lista na posiï¿½ï¿½o indicada e insere o valor na posiï¿½ï¿½o desejada
+  "Substitui o valor na posição indicada da lista."
+  (if (or (< coluna 0) (>= coluna (length lista)))
+      lista  ; Retorna a lista original se o índice da coluna estiver fora dos limites
+      ;; Divide a lista na posição indicada e insere o valor na posição desejada
       (let ((antes (subseq lista 0 coluna))
             (depois (subseq lista (1+ coluna))))
         (append antes (list valor) depois))))
+
 
 ;; (substituir-posicao 0 (linha 0 (tabuleiro-teste))) -> (NIL 25 54 89 21 8 36 14 41 96)
 ;; (substituir-posicao 0 (linha 0 (tabuleiro-teste)) T) -> (T 25 54 89 21 8 36 14 41 96) 
@@ -138,13 +139,15 @@ nessa posiï¿½ï¿½o.|#
 funï¿½ï¿½o deverï¿½ retornar o tabuleiro com a cï¿½lula substituï¿½da pelo valor pretendido. Utiliza a funï¿½ï¿½o
 substituir-posicao definida anteriormente. |#
 (defun substituir (linha-indice coluna-indice tabuleiro &optional (valor nil))
-  "Substitui o valor na cï¿½lula indicada pelos ï¿½ndices no tabuleiro.
-  - linha-indice: ï¿½ndice da linha na qual realizar a substituiï¿½ï¿½o.
-  - coluna-indice: ï¿½ndice da coluna na qual realizar a substituiï¿½ï¿½o.
-  - tabuleiro: Tabuleiro no qual realizar a substituiï¿½ï¿½o.
-  - valor: Valor a ser inserido na cï¿½lula. Por padrï¿½o, ï¿½ NIL."
-  (substituir-posicao linha-indice tabuleiro
-                      (substituir-posicao coluna-indice (nth linha-indice tabuleiro) valor)))
+  "Substitui o valor na célula indicada pelos índices no tabuleiro."
+  (if (or (< linha-indice 0) (>= linha-indice (length tabuleiro))
+          (< coluna-indice 0) (>= coluna-indice (length (first tabuleiro))))
+      tabuleiro  ; Retorna o tabuleiro inalterado se os índices estiverem fora dos limites
+      (substituir-posicao linha-indice tabuleiro
+                          (substituir-posicao coluna-indice (nth linha-indice tabuleiro) valor))))
+
+
+
 
 ;; (substituir 0 0 (tabuleiro-teste) T)
 
@@ -409,7 +412,9 @@ substituir-posicao definida anteriormente. |#
 
 (defun operador-geral (tabuleiro numero-linhas numero-colunas)
   (if (eq (posicao-cavalo tabuleiro) NIL)
-      (format t "Cavalo por posicionar.~%")
+      (progn
+        (format t "Cavalo por posicionar.~%")
+        NIL)
     (let* ((posicao-cavalo-inicio (posicao-cavalo tabuleiro))
            (nova-linha (+ (first posicao-cavalo-inicio) numero-linhas))
            (nova-coluna (+ (second posicao-cavalo-inicio) numero-colunas))
@@ -632,151 +637,6 @@ substituir-posicao definida anteriormente. |#
         (format t "Não há mais movimentos possíveis a partir desta posição. ~%"))
     sucessores))
 
-#|-----------------------------------------------------------------------------------------------------------|#
-#|----------------------------------------------------- BFS -------------------------------------------------|#
-#|-----------------------------------------------------------------------------------------------------------|#
-
-#|
-- Utiliza uma estrutura de dados tipo fila (abertos).
-- Explora os nós em um nível antes de passar para o próximo nível.
-- Adiciona sucessores no final da fila (nconc abertos (list sucessor)).
-|#
-
-(defun bfs-recursivo (fila fechados nos-gerados nos-expandidos)
-  "Função recursiva auxiliar para BFS. Processa nós de forma recursiva."
-  (if (null fila) ; Checa se a fila está vazia
-      (let ((fator-ramificacao-media (calcular-fator-ramificacao-media nos-gerados nos-expandidos)))
-        (format t "Fator de Ramificação Média: ~A ~%" fator-ramificacao-media)
-        (list 'Failure nos-gerados nos-expandidos fator-ramificacao-media)) ; Retorna falha com contadores e fator
-      (let* ((no-atual (first fila))
-             (resto-fila (rest fila))
-             (novos-abertos '()))
-        (incf nos-expandidos)
-        (dolist (sucessor (expandir-no no-atual))
-          (unless (find sucessor fechados :test #'equal)
-            (incf nos-gerados)
-            (push sucessor novos-abertos)))
-        (push no-atual fechados)
-        (bfs-recursivo (append resto-fila novos-abertos) fechados nos-gerados nos-expandidos))))
-
-
-
-#|
-- novos-abertos é uma lista local usada para acumular os sucessores que ainda não foram explorados.
-- Utilizamos nconc para concatenar novos-abertos ao final de abertos. Como nconc modifica a lista original, 
-usamos reverse em novos-abertos para manter a ordem correta dos sucessores.
-- A função então chama a si mesma recursivamente com a nova lista de abertos e a lista de fechados atualizada.
-|#
-
-(defun bfs (tabuleiro-problema)
-  "Executa a busca em largura (BFS) no problema do tabuleiro para atingir o objetivo."
-  (let* ((valor-celula-inicial (celula 0 0 tabuleiro-problema))
-         (tabuleiro-inicializado (inicializar-cavalo tabuleiro-problema))
-         (pontuacao-inicial (+ (if (numberp valor-celula-inicial) valor-celula-inicial 0) 2))
-         (abertos (list (criar-no tabuleiro-inicializado (posicao-cavalo tabuleiro-inicializado) pontuacao-inicial 0 nil)))
-         (tempo-execucao (medir-tempo-execucao 'bfs-recursivo abertos '() 0 0)))
-    (format t "Tempo de execução: ~A segundos ~%" tempo-execucao)
-    tempo-execucao))
-
-
-#|-----------------------------------------------------------------------------------------------------------|#
-#|----------------------------------------------------- DFS -------------------------------------------------|#
-#|-----------------------------------------------------------------------------------------------------------|#
-
-#|
-- Utiliza uma estrutura de dados tipo pilha (abertos).
-- Explora profundamente cada caminho possível antes de recuar.
-- Adiciona sucessores no topo da pilha (push sucessor abertos).
-|#
-
-(defun dfs-recursivo (abertos fechados nos-gerados nos-expandidos)
-  "Função recursiva auxiliar para DFS. Processa nós de forma recursiva."
-  (if abertos ; Se há nós abertos para explorar
-      (let ((no-atual (pop abertos))) ; Pega o último nó da pilha
-        (incf nos-expandidos) ; Incrementa o contador de nós expandidos
-        (format t "~%Nó expandido. Total de nós expandidos: ~a. ~%" nos-expandidos)
-        (format t "~%Profundidade atual (g(x)): ~a. ~%" (profundidade no-atual))
-        (dolist (sucessor (expandir-no no-atual)) ; Expande os sucessores do nó atual
-          (unless (find sucessor fechados :test #'equal) ; Verifica se o sucessor já foi explorado
-            (incf nos-gerados) ; Incrementa o contador de nós gerados
-            (format t "~%Gerado novo nó. Total de nós gerados: ~a ~%" nos-gerados)
-            (if (atingiu-objetivo? sucessor)
-                (return (list 'Success sucessor nos-gerados nos-expandidos)) ; Retorna sucesso se atingir o objetivo
-                (push sucessor abertos)))) ; Adiciona o sucessor ao topo da pilha abertos
-        (push no-atual fechados) ; Marca o nó atual como explorado
-        (dfs-recursivo abertos fechados nos-gerados nos-expandidos)) ; Chamada recursiva com os novos estados de abertos e fechados
-    (list 'Failure nos-gerados nos-expandidos))) ; Se não há mais nós para explorar, retorna falha
-
-
-(defun dfs (tabuleiro-problema)
-  "Executa a busca em profundidade (DFS) no problema do tabuleiro para atingir o objetivo."
-  (let* ((valor-celula-inicial (celula 0 0 tabuleiro-problema))
-         (tabuleiro-inicializado (inicializar-cavalo tabuleiro-problema))
-         (pontuacao-inicial (+ (if (numberp valor-celula-inicial) valor-celula-inicial 0) 2))
-         (abertos (list (criar-no tabuleiro-inicializado (posicao-cavalo tabuleiro-inicializado) pontuacao-inicial 0 nil))))
-    (dfs-recursivo abertos '() 0 0))) ; Inicia a busca com contadores de nós gerados e expandidos zerados
-
-#|-----------------------------------------------------------------------------------------------------------|#
-#|----------------------------------------------------- A* --------------------------------------------------|#
-#|-----------------------------------------------------------------------------------------------------------|#
-
-(defun f (no)
-  "Calcula a função de avaliação f para o nó usando a heurística escolhida."
-  (let ((heuristica (obter-heuristica)))
-    (if (functionp heuristica)
-        (+ (profundidade no) ; g(n): custo do caminho do nó inicial até n
-           (funcall heuristica no)) ; h(n): heurística do nó até o objetivo
-        (profundidade no)))
-) ; Se não houver heurística, usa apenas g(n)
-
-(defun merge-sort (list)
-  (if (small list) list
-	  (merge-lists
-		(merge-sort (left-half list))
-		(merge-sort (right-half list)))))
-
-(defun small (list)
-  (or (null list) (null (cdr list))))
-
-(defun right-half (list)
-  (last list (ceiling (/ (length list) 2))))
-(defun left-half (list)
-  (ldiff list (right-half list)))
-
-(defun merge-lists (list1 list2)
-  "Funde duas listas de nós ordenadas com base na função de avaliação f."
-  (merge 'list list1 list2 (lambda (no1 no2) (< (f no1) (f no2)))))
-
-
-(defun a-estrela-recursivo (abertos fechados nos-gerados nos-expandidos)
-  "Função recursiva auxiliar para o algoritmo A*."
-  (block a-estrela-bloco
-    (if (null abertos) ; Checa se a lista de abertos está vazia
-        (list 'Failure nos-gerados nos-expandidos) ; Retorna falha se não há mais nós para explorar
-        (let* ((no-atual (first abertos)) ; Pega o primeiro nó da lista de abertos
-               (abertos-restantes (rest abertos)) ; Resto da lista de abertos
-               (sucessores (expandir-no no-atual))) ; Expande o nó atual para encontrar sucessores
-                (format t "~%Nó expandido. Total de nós expandidos: ~a. ~%" nos-expandidos)
-                (format t "~%Profundidade atual (g(x)): ~a. ~%" (profundidade no-atual))
-          (incf nos-expandidos) ; Incrementa o contador de nós expandidos
-          (when (atingiu-objetivo? no-atual)
-            (return-from a-estrela-bloco (list 'Success no-atual nos-gerados nos-expandidos))) ; Retorna sucesso se o objetivo for atingido
-          (dolist (sucessor sucessores)
-            (unless (find sucessor fechados :test #'equal)
-              (push sucessor abertos-restantes) ; Adiciona o sucessor aos abertos, se não estiver nos fechados
-              (incf nos-gerados) ; Incrementa o contador de nós gerados
-                 (format t "~%Gerado novo nó. Total de nós gerados: ~a ~%" nos-gerados)))
-          (push no-atual fechados) ; Adiciona o nó atual aos fechados
-          (a-estrela-recursivo (merge-sort abertos-restantes) fechados nos-gerados nos-expandidos)))) ; Chama a função recursivamente com a lista de abertos ordenada
-)
-
-(defun a-estrela (tabuleiro-problema)
-  "Executa o algoritmo A* no problema do tabuleiro para atingir o objetivo."
-  (let* ((valor-celula-inicial (celula 0 0 tabuleiro-problema)) ; Obtém o valor da célula inicial do tabuleiro
-         (tabuleiro-inicializado (inicializar-cavalo tabuleiro-problema)) ; Inicializa o cavalo no tabuleiro
-         (pontuacao-inicial (+ (if (numberp valor-celula-inicial) valor-celula-inicial 0) 2)) ; Calcula a pontuação inicial
-         (abertos (list (criar-no tabuleiro-inicializado (posicao-cavalo tabuleiro-inicializado) pontuacao-inicial 0 nil)))) ; Cria a lista de abertos com o nó inicial
-    (a-estrela-recursivo abertos '() 0 0))) ; Inicia o A* recursivo com a lista de abertos e fechados vazia, e contadores zerados
 
 #|-----------------------------------------------------------------------------------------------------------|#
 #|------------------------------------------- ESTATÍSTICAS DE DADOS -----------------------------------------|#

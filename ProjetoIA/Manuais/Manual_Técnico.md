@@ -53,7 +53,7 @@ O "Jogo do Cavalo" foi implementado em LISP, tendo sido desenvolvido com o auxí
   )
 )
 
-(defun ficheiro-solucao ()
+(defun diretoria-solucao ()
 (let ((path  "C:\\Path\\solucao.dat"))
     path
   )
@@ -120,14 +120,39 @@ O cavalo apenas pode ser colocado na primeira linha, se não for indicada a colu
 
 ```Lisp
 (defun inicializar-cavalo (tabuleiro &optional (coluna 0))
-  "Coloca o cavalo na posição [0, coluna] de uma cópia do tabuleiro, onde coluna é opcional e deve ser entre 0 e 10."
-  (let ((novo-tabuleiro (limpar-cavalos (copy-list tabuleiro)))) ; Cria uma cópia do tabuleiro e remove os cavalos existentes
+  "Coloca o cavalo na coluna selecionada para a primeira jogada e retorna o valor original da célula."
+  (let ((novo-tabuleiro (copy-list tabuleiro))
+        (valor-celula-original (celula 0 coluna tabuleiro))) ; Sempre obtém o valor original da célula
     (cond
-      ((or (< coluna 0) (> coluna 10)) ; Se a coluna é inválida
-       (setq coluna 0)) ; Ajusta para 0
-      (t
-       (setf (nth coluna (car novo-tabuleiro)) 'T))) ; Coloca o cavalo na posição especificada no novo tabuleiro
-    novo-tabuleiro)) ; Retorna o novo tabuleiro
+      ((or (> coluna 9) (< coluna 0))
+        (progn
+          (format t "Coluna inválida.~%")
+          (values novo-tabuleiro valor-celula-original))) ; Retorna o tabuleiro sem mudanças e valor da célula
+      ((not (eq (posicao-cavalo novo-tabuleiro) NIL))
+        (progn
+          (format t "Cavalo já colocado.~%")
+          (values novo-tabuleiro valor-celula-original))) ; Retorna o tabuleiro sem mudanças e valor da célula
+      (T
+        (let* ((nova-linha 0)
+               (nova-coluna coluna)
+               (valor-celula (celula nova-linha nova-coluna novo-tabuleiro))
+               (simetrico (numero-simetrico valor-celula))
+               (posicao-simetrico (posicao-valor simetrico novo-tabuleiro))
+               (e-duplo (numero-duplo valor-celula))
+               (maximo-duplo (maximo-duplo novo-tabuleiro))
+               (posicao-duplo (posicao-valor maximo-duplo novo-tabuleiro)))
+          (setq valor-celula-original valor-celula)
+(format t "Cavalo sendo colocado na casa com ~A pontos.~%" valor-celula-original) ; Imprime o número de pontos
+          (cond
+            ((eq e-duplo T)
+              (setf (nth nova-coluna (nth nova-linha novo-tabuleiro)) 'T)
+              (setf (nth (second posicao-duplo) (nth (first posicao-duplo) novo-tabuleiro)) NIL))
+            (T
+              (setf (nth nova-coluna (nth nova-linha novo-tabuleiro)) 'T)
+              (setf (nth (second posicao-simetrico) (nth (first posicao-simetrico) novo-tabuleiro)) NIL)))
+          (values novo-tabuleiro valor-celula-original))))) ; Retorna o novo tabuleiro modificado, o valor original
+)
+
 ```
 
 ### Implementação da Movimentação
@@ -182,48 +207,36 @@ Por uma questão de uniformização da numeração do operador e qual o moviment
 ```Lisp
 (defun operador-geral (tabuleiro numero-linhas numero-colunas)
   (if (eq (posicao-cavalo tabuleiro) NIL)
-      (format t "Cavalo por posicionar.~%")
-    (let* 
-        (
-         (posicao-cavalo-inicio (posicao-cavalo tabuleiro))
-         (nova-linha (+ (first posicao-cavalo-inicio) numero-linhas))
-         (nova-coluna (+ (second posicao-cavalo-inicio) numero-colunas))
-         (posicao-cavalo-final (list nova-linha nova-coluna))
-         (movimento-e-valido (movimento-valido nova-linha nova-coluna tabuleiro))
-         )
+      (progn
+        (format t "Cavalo por posicionar.~%")
+        NIL)
+    (let* ((posicao-cavalo-inicio (posicao-cavalo tabuleiro))
+           (nova-linha (+ (first posicao-cavalo-inicio) numero-linhas))
+           (nova-coluna (+ (second posicao-cavalo-inicio) numero-colunas))
+           (posicao-cavalo-final (list nova-linha nova-coluna))
+           (movimento-e-valido (movimento-valido nova-linha nova-coluna tabuleiro)))
       (if (eq movimento-e-valido NIL)
-          (format t "Movimento inválido.~%")
-        (let* 
-            (
-             (simetrico (numero-simetrico (celula nova-linha nova-coluna tabuleiro)))
-             (posicao-simetrico (posicao-valor simetrico tabuleiro))
-             (e-duplo (numero-duplo (celula nova-linha nova-coluna tabuleiro)))
-             (maximo-duplo (maximo-duplo tabuleiro))
-             (posicao-duplo (posicao-valor maximo-duplo tabuleiro))
-             )
+          (progn
+            #|(format t "Movimento inválido.~%")|#
+            NIL) ; Retorna NIL se o movimento não for válido
+        (let* ((simetrico (numero-simetrico (celula nova-linha nova-coluna tabuleiro)))
+               (posicao-simetrico (posicao-valor simetrico tabuleiro))
+               (e-duplo (numero-duplo (celula nova-linha nova-coluna tabuleiro)))
+               (maximo-duplo (maximo-duplo tabuleiro))
+               (posicao-duplo (posicao-valor maximo-duplo tabuleiro))
+               (novo-tabuleiro tabuleiro)) ; Mantém uma referência ao tabuleiro atual
           (cond 
            ((eq e-duplo T)
-            (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
-                        (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
-                                    (substituir (first posicao-duplo)(second posicao-duplo) tabuleiro 
-                                                NIL)
-                                    NIL)
-                        T)
-            )
+            (setf novo-tabuleiro (substituir (first posicao-cavalo-final) (second posicao-cavalo-final)
+                           (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
+                                       (substituir (first posicao-duplo) (second posicao-duplo) tabuleiro NIL)
+                                       NIL) 'T)))
            (T
-            (substituir (first posicao-cavalo-final)(second posicao-cavalo-final)
-                        (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
-                                    (substituir (first posicao-simetrico)(second posicao-simetrico) tabuleiro 
-                                                NIL)
-                                    NIL)
-                        T)
-            )
-           )
-          )
-        )
-      )
-    )
-)
+            (setf novo-tabuleiro (substituir (first posicao-cavalo-final) (second posicao-cavalo-final)
+                           (substituir (first posicao-cavalo-inicio) (second posicao-cavalo-inicio)
+                                       (substituir (first posicao-simetrico) (second posicao-simetrico) tabuleiro NIL)
+                                       NIL) 'T))))
+          (list novo-tabuleiro posicao-cavalo-final)))))) ; Retorna o novo tabuleiro e a nova posição do cavalo
 ```
 
 ## Nós
@@ -232,17 +245,78 @@ Para uma eficaz implementação e análise de estratégias, optamos por represen
 
 ### Composição de um nó
 
-TODO ADICIONAR A COMPOSIÇÃO
+```Lisp
+(defun criar-no(tabuleiro posicao-do-cavalo pontuacao-atual profundidade no-pai &optional(heuristica 0))
+  "Função responsável para criar um nó
+   Estrutura do nó: Estado do tabuleiro - Posicao atual do cavalo - Pontuação obtida - Profundidade (equivale
+   às jogadas feitas) - Estado anterior do tabuleiro - Heuristica utilizada."
+  (list tabuleiro posicao-do-cavalo pontuacao-atual profundidade no-pai heuristica)
+)
+```
 
 ### Seletores de um nó
 
-TODO ADICIONAR OS SELETORES
+```Lisp
+(defun estado-tabuleiro(no)
+  "Função responsável por mostrar o estado do tabuleiro no nó fornecido."
+  (first no)
+)
+
+(defun posicao-do-cavalo-atual(no)
+  "Função responsável por mostrar a posicao atual onde está o cavalo."
+  (second no)
+)
+
+(defun pontuacao-atual(no)
+  "Função responsável por mostrar quantos pontos já se tem no nó."
+  (third no)
+)
+
+(defun profundidade(no)
+  "Função responsável por mostrar a profundidade do nó que representa as jogadas feitas até chegar aquele
+   estado"
+  (fourth no)
+)
+
+(defun no-pai(no)
+  "Função responsável por mostrar o nó pai deste, ou seja, o estado do tabuleiro anterior a ter se jogado 
+   para chegar aquele estado"
+  (fifth no)
+)
+
+(defun no-heuristica(no)
+  "Função responsável por mostrar a heuristica"
+  (sixth no)
+)
+
+```
 
 ## Sucessões
 
 A sucessão de um nó refere-se ao conjunto de todos os movimentos válidos que o cavalo pode realizar a partir da sua posição no tabuleiro. Cada um destes movimentos leva o cavalo a uma nova posição, gerando um novo nó no contexto do jogo. Assim, a sucessão é uma representação crucial de possíveis trajetórias e estratégias que o cavalo pode seguir em sua jornada pelo tabuleiro.
 
-TODO ADICIONAR AS FUNÇÕES DAS SUCESSÕES
+```Lisp
+(defun expandir-no (no)
+  "Expande um nó gerando todos os possíveis sucessores baseados nos movimentos do cavalo."
+  (let ((tabuleiro-atual (estado-tabuleiro no))
+        (pontuacao-atual (pontuacao-atual no))
+        (profundidade-atual (profundidade no))
+        sucessores)
+    (dolist (operador-numero (lista-operadores))
+      (let* ((resultado-operador (escolhe-operador tabuleiro-atual operador-numero))
+             (novo-tabuleiro (first resultado-operador))
+             (nova-posicao (second resultado-operador)))
+        (when novo-tabuleiro
+          (format t "Movendo para linha ~A, coluna ~A. ~%" (first nova-posicao) (second nova-posicao))
+          (let ((valor-celula (celula (first nova-posicao) (second nova-posicao) tabuleiro-atual)))
+            (when (numberp valor-celula)
+              (let ((nova-pontuacao (+ pontuacao-atual valor-celula)))
+                (format t "Pontos obtidos: ~A, Pontuação total: ~A ~%" valor-celula nova-pontuacao)
+                (push (criar-no novo-tabuleiro nova-posicao nova-pontuacao (1+ profundidade-atual) no) sucessores)))))))
+    (if (null sucessores)
+        (format t "Não há mais movimentos possíveis a partir desta posição. ~%"))
+    sucessores))
+```
 
 # 4. Algoritmos e sua implementação
 
@@ -283,12 +357,77 @@ O algoritmo A* é um algortimo de procura que combina as melhores característic
 
 ## Ordenação
 
-TODO
+Para a ordenação dos nós nos algoritmos de busca, como o A* (A-Estrela), utilizou-se o algoritmo Merge Sort. O Merge Sort é uma escolha eficaz para esta tarefa devido às suas características únicas e desempenho consistente.
+
+Consiste num algoritmo de ordenação baseado na abordagem de divisão e conquista. Ele divide o conjunto de dados (neste caso, a lista de nós) em metades menores, ordena essas metades (recursivamente) e depois as combina de forma eficiente. As etapas básicas do algoritmo são:
+
+```Lisp
+(defun merge-sort (list)
+  (if (small list) list
+	  (merge-lists
+		(merge-sort (left-half list))
+		(merge-sort (right-half list)))))
+
+(defun small (list)
+  (or (null list) (null (cdr list))))
+
+(defun right-half (list)
+  (last list (ceiling (/ (length list) 2))))
+(defun left-half (list)
+  (ldiff list (right-half list)))
+
+(defun merge-lists (list1 list2)
+  "Funde duas listas de nós ordenadas com base na função de avaliação f."
+  (merge 'list list1 list2 (lambda (no1 no2) (< (f no1) (f no2)))))
+```
 
 ## Heurísticas
 
-TODO
+As heurísticas são um componente crucial em muitos algoritmos de procura, especialmente em algoritmos de procura informada como o A-Estrela (A*). Representam estimativas ou regras práticas para avaliar quão favorável é um determinado caminho ou nó, influenciando a ordem de exploração dos nós pelo algoritmo.
 
+```Lisp
+(let ((heuristica-escolhida nil))
+     (defun definir-heuristica(heuristica-pretendida)
+       (setf heuristica-escolhida heuristica-pretendida)
+     )
+     (defun obter-heuristica() 
+         (case heuristica-escolhida
+             ('base 'h-base)
+             ('implementada NIL)
+             (otherwise NIL)
+         )
+     )
+
+     #| HEURISTICA DADA PELO PROFESSOR - BASE 
+       h(x) = o(x)/m(x) -> Privelegia casas com maior nómero de pontos.
+       m(x) = Média de pontos no tabuleiro.
+       o(x) = Número de pontos que falta para atingir objetivo.
+      |#
+     (defun m-base (no)
+       "Esta Função calcula o m(x) da heuristica base consoante o estado do tabuleiro. Se as casas disponiveis ou os pontos no tabuleiro forem 0, então o m será 0 também."
+       (if (or(eq (pontos-no-tabuleiro (estado-tabuleiro no)) 0) (eq (posicoes-livres-tabuleiro (estado-tabuleiro no)) 0))
+           0
+         (float (/ (pontos-no-tabuleiro (estado-tabuleiro no)) (posicoes-livres-tabuleiro (estado-tabuleiro no))))
+         )
+     )
+
+     (defun o-base (no)
+       "Esta Função calcula o o(x) da heuristica base consoante o estado do tabuleiro. Ou seja, para sabermos os pontos conseguidos, percisamos do nó. Tendo o nó, podemos recorrer diretamente a uma das propriedades do nó, a pontuação."
+       (if (eq (obter-objetivo) nil)
+           NIL
+         (float (/ (pontos-no-tabuleiro (estado-tabuleiro no)) (posicoes-livres-tabuleiro (estado-tabuleiro no))))
+         )
+     )
+     
+     (defun h-base (no)
+       "Esta Função calcula a heuristica do nó, usando o estado do tabuleiro do nó."
+       (if (or(eq (o-base no) 0) (eq (m-base no) 0))
+           0
+           (float (/ (o-base no) (m-base no)))
+       )
+     )
+)
+```
 
 # 5. Resultados dos Algoritmos
 
@@ -331,4 +470,4 @@ Usando profundidade x
 
 # 6. Limitações técnicas e ideias para desenvolvimento futuro
 
-TODO LIMITAÇÕES E IDEIAS FUTURAS
+Entre as dificuldades mais notáveis enfrentadas durante o desenvolvimento e a execução destes algoritmos, destacam-se as limitações inerentes aos próprios algoritmos e os desafios técnicos, como a prevenção de stack overflow e a necessidade de gerenciar eficientemente a memória, especialmente no caso do BFS.

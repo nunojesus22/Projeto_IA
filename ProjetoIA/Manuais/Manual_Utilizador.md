@@ -211,22 +211,6 @@ Ao escolher a opção "2", terá de inserir o valor da profundidade para obter a
 
 Ao escolher a opção "3", terá de escolher uma heurística para a solução do problema escolhido.
 
-## Menu Configuração do Tabuleiro - ATUALIZAR
-
-Dentro de cada problema, será possível configurar o tabuleiro, escolhendo a posição do cavalo (apenas na primeira linha).
-
-```Lisp
-          ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-          +                ESCOLHA A POSIÇÃO DO CAVALO           +
-          +                APENAS NA PRIMEIRA LINHA              +
-          +                                                      +
-          +                1-Voltar ao Menu Modo Jogo            +
-          +                                                      +
-          ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
- Opção =>
-```
 
 ## Menu Regras do Jogo
 

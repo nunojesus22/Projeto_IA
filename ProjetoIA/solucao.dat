@@ -1,0 +1,63 @@
+
+ 
+ Problema: ((T 20 44 NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL 3 30 NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL 22 NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL))
+Algoritmo: BFS
+Output: Cavalo já colocado.
+Movendo para linha 2, coluna 1. 
+Pontos obtidos: 3, Pontuação total: 5 
+Nó expandido. 
+Nó gerado. 
+Total de nós gerados até agora: 1, Nós expandidos até agora: 1
+Movendo para linha 0, coluna 2. 
+Pontos obtidos: 44, Pontuação total: 49 
+Nó expandido. 
+Nó gerado. 
+Total de nós gerados até agora: 2, Nós expandidos até agora: 2
+Não há mais movimentos possíveis a partir desta posição. 
+Nó expandido. 
+Total de nós gerados até agora: 2, Nós expandidos até agora: 3
+Busca concluída. Nenhum caminho encontrado.
+Tempo de execução: 1 milissegundos
+
+
+ 
+ Problema: ((T 20 44 NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL 3 30 NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL 22 NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL))
+Algoritmo: DFS
+Output: Cavalo já colocado.
+Nó expandido. 
+Movendo para linha 2, coluna 1. 
+Pontos obtidos: 3, Pontuação total: 5 
+Nó gerado. 
+Total de nós gerados: 1, Total de nós expandidos: 1
+Nó expandido. 
+Movendo para linha 0, coluna 2. 
+Pontos obtidos: 44, Pontuação total: 49 
+Nó gerado. 
+Total de nós gerados: 2, Total de nós expandidos: 2
+Nó expandido. 
+Não há mais movimentos possíveis a partir desta posição. 
+Total de nós gerados: 2, Total de nós expandidos: 3
+Fator de Ramificação Média (DFS): 0.6666667
+Tempo de execução (DFS): 1 milissegundos
+
+
+ 
+ Problema: ((T 20 44 NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL 3 30 NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL 22 NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL) (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL))
+Algoritmo: A-ESTRELA
+Output: Cavalo já colocado.
+Movendo para linha 2, coluna 1. 
+Pontos obtidos: 3, Pontuação total: 5 
+Nó expandido. 
+Nó gerado. 
+Total de nós gerados: 1, Total de nós expandidos: 1
+Movendo para linha 0, coluna 2. 
+Pontos obtidos: 44, Pontuação total: 49 
+Nó expandido. 
+Nó gerado. 
+Total de nós gerados: 2, Total de nós expandidos: 2
+Não há mais movimentos possíveis a partir desta posição. 
+Nó expandido. 
+Total de nós gerados: 2, Total de nós expandidos: 3
+Fator de Ramificação Média (A*): 0.6666667
+Tempo de execução (A*): 1 milissegundos
+
